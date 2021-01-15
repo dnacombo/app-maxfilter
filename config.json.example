@@ -1,0 +1,25 @@
+{
+    "input": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test/rest1-raw.fif",
+    "output_tag": "sss",
+    "params": {
+        "origin": "auto",
+        "int_order": 8,
+        "ext_order": 3,
+        "calibration": null,
+        "cross_talk": null,
+        "st_duration": null,
+        "st_correlation": 0.98,
+        "coord_frame": "head",
+        "destination": null,
+        "regularize": "in",
+        "ignore_ref": false,
+        "bad_condition": "error",
+        "head_pos": null,
+        "st_fixed": true,
+        "st_only": false,
+        "mag_scale": 100.0,
+        "skip_by_annotation": ["edge", "bad_acq_skip"],
+        "extended_proj": [],
+        "verbose": null
+   }
+}
