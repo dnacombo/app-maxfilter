@@ -5,11 +5,12 @@ This is a draft of a future Brainlife App based on [MNE MaxFilter](https://mne.t
 # app-example-documentation
 
 1) Apply SSS MaxFilter on MEG data 
-2) Remove artifacts
-3) Input file is a MEG file in .fif format, ouput file is a .fif MEG file after maxwell filtering 
+2) Reduce environmental noise
+3) Input file is a MEG file in .fif format, ouput file is a .fif MEG file after Maxwell filtering 
 
 ### Authors
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
+- [Maximilien Chaumon](maximilien.chaumon@icm-institute.org)
 
 ### Contributors
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
