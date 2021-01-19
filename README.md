@@ -18,3 +18,34 @@ This is a draft of a future Brainlife App based on [MNE MaxFilter](https://mne.t
 
 ### Citations
 1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+
+## Running the App 
+
+### On Brainlife.io
+
+This App has not yet been register in Brainlife.io
+
+### Running Locally (on your machine)
+
+1. git clone this repo.
+2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files (see `config.json.example`).
+
+```json
+{
+  "input": "rest1-raw.fif"
+}
+```
+
+3. Launch the App by executing `main`
+
+```bash
+./main
+```
+
+## Output
+
+The output files will be generated inside the current working directory (pwd), inside a specifc directory called:
+
+```
+out_dir
+```
