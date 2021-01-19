@@ -44,8 +44,4 @@ This App has not yet been register in Brainlife.io
 
 ## Output
 
-The output files will be generated inside the current working directory (pwd), inside a specifc directory called:
-
-```
-out_dir
-```
+The output file is a MEG file in .fif format.
