@@ -14,11 +14,11 @@
 set -e
 set -x
 
-# make output directory
+# Make output directory
 #mkdir -p out_dir
 
-# run the actual python code
-#singularity exec docker://brainlife/dipy:1.1.1 python3 maxfilter.py
+# Run the actual python code
+# singularity exec docker://brainlife/mne:latest python3 maxfilter.py  # mne version: 0.19 can't read my .fif file
 
 # Test local
 python3 ./maxfilter.py
