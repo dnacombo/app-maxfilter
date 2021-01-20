@@ -2,6 +2,9 @@ import json
 import mne
 
 
+# Test version
+print(mne.__version__)
+
 # Load inputs from config.json
 with open('config.json') as config_json:
     config = json.load(config_json)
