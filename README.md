@@ -27,7 +27,7 @@ This is a draft of a future Brainlife App based on [MNE MaxFilter](https://mne.t
 
 ### On Brainlife.io
 
-This App has not yet been register in Brainlife.io.
+This App has not yet been registered in Brainlife.io.
 
 ### Running Locally (on your machine)
 
