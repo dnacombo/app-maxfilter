@@ -31,8 +31,8 @@ This App has not yet been registered in Brainlife.io.
 
 ### Running Locally (on your machine)
 
-1. git clone this repo.
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files (see `config.json.example`).
+1. git clone this repo
+2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files (see `config.json.example`)
 
 ```json
 {
