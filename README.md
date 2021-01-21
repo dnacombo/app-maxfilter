@@ -1,8 +1,8 @@
 # app-maxfilter
 
-This is a draft of a future Brainlife App based on [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
+This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
 
-# app-example-documentation
+# app-maxfilter-documentation
 
 1) Apply SSS or tSSS MaxFilter on MEG data 
 2) Reduce environmental noise
