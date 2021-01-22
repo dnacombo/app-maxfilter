@@ -18,7 +18,7 @@ set -x
 #mkdir -p out_dir
 
 # Run the actual python code
-# singularity exec docker://brainlife/mne:latest python3 maxfilter.py  # mne version: 0.19 can't read my .fif file
+singularity exec docker://brainlife/mne:0.22.0 python3 maxfilter.py
 
 # Test local
-python3 ./maxfilter.py
+# python3 ./maxfilter.py
