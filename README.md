@@ -9,7 +9,8 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
 3) Input files are:
     * a MEG file in `.fif` format,
     * an optional fine calibration file in `.dat`,
-    * an optional crosstalk compensation file in `.fif`
+    * an optional crosstalk compensation file in `.fif`,
+    * an optional head position file in `.pos`,
 4) Ouput file is a `.fif` MEG file after Maxwell filtering 
 
 ### Authors
