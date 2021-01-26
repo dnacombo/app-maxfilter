@@ -1,5 +1,5 @@
 {
-    "input_raw": "rest1-raw.fif",
+    "input_raw": "/input/rest1-raw.fif",
     "input_calibration": null,
     "input_cross_talk": null,
     "head_pos": null,
