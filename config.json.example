@@ -4,7 +4,7 @@
     "input_cross_talk": null,
     "head_pos": null,
     "output_tag": "sss",
-    "params": {
+    "params_maxwell_filter": {
         "origin": "auto",
         "int_order": 8,
         "ext_order": 3,
@@ -20,6 +20,19 @@
         "mag_scale": 100.0,
         "skip_by_annotation": ["edge", "bad_acq_skip"],
         "extended_proj": [],
+        "verbose": null
+   },
+    "params_save": {
+        "picks": null,
+        "tmin": 0,
+        "tmax": null,
+        "buffer_size_sec": null,
+        "drop_small_buffer": false,
+        "proj": false,
+        "fmt": "single",
+        "overwrite": true,
+        "split_size": "2GB",
+        "split_naming": "neuromag",
         "verbose": null
    }
 }

@@ -1,8 +1,10 @@
+#!/usr/local/bin/python3
+
 import json
 import mne
 
 
-# Test version
+# Print mne version
 print(mne.__version__)
 
 # Load inputs from config.json
@@ -29,7 +31,8 @@ if head_pos_file is not None:
 
 # Apply MaxFilter
 raw_sss = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
-                                           head_pos=head_pos_file, **config['params'])
+                                           head_pos=head_pos_file, **config['params_maxwell_filter'])
 
 # Save file
-raw_sss.save(raw_sss.filenames[0].replace('.fif', '_%s.fif' % config['output_tag']), overwrite=True)
+raw_sss.save(raw_sss.filenames[0].replace('.fif', '_%s.fif' % config['output_tag']),
+             **config['params_save'])
