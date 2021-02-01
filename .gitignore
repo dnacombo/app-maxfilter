@@ -1,5 +1,7 @@
 config.json
 raw_sss.fif
+raw_tsss.fif
+product.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
