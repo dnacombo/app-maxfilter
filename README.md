@@ -11,7 +11,9 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional fine calibration file in `.dat`,
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
-4) Ouput file is a `.fif` MEG file after Maxwell filtering 
+4) Ouput files are
+    * a `.fif` MEG file after Maxwell filtering,
+    * an `.html` report containing figures.
 
 ### Authors
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
@@ -49,4 +51,4 @@ This App has not yet been registered in Brainlife.io.
 
 ## Output
 
-The output file is a MEG file in `.fif` format.
+The output files are a MEG file in `.fif` format and an `.html` report.
