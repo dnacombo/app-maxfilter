@@ -1,5 +1,5 @@
 {
-    "input_raw": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test/rest1_bad_channels-raw.fif",
+    "input_raw": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test//rest1_bad_channels-raw.fif",
     "input_calibration": null,
     "input_cross_talk": null,
     "head_pos": null,

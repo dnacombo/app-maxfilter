@@ -67,6 +67,7 @@ else:
                        **config['params_save'])
 
 # Generate a report
+report = mne.Report(title='Results Maxfilter', verbose=True)
 
 # Plot MEG signals in temporal domain
 fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False)
@@ -76,12 +77,9 @@ fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=Fals
 fig_raw_psd = raw.plot_psd()
 fig_raw_maxfilter_psd = raw_maxfilter.plot_psd()
 
-# Create report
-report = mne.Report(title='Results Maxfilter', verbose=True)
-
 # Give info on the raw data
-data_folder = '/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test'  # change for BL
-report.parse_folder(data_folder, pattern='*bad_channels-raw.fif', render_bem=False)
+data_folder = '/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test/'  # change for BL
+report.parse_folder(data_folder, pattern='*rest1_bad_channels-raw.fif', render_bem=False)
 
 # Add figures to report
 report.add_figs_to_section(fig_raw, captions='MEG signals before MaxFilter')
