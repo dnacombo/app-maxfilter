@@ -70,8 +70,8 @@ else:
 report = mne.Report(title='Results Maxfilter', verbose=True)
 
 # Plot MEG signals in temporal domain
-fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False)
-fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=False)
+fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
+fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
 
 # Plot power spectral density
 fig_raw_psd = raw.plot_psd()
