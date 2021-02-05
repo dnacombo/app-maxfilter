@@ -3,8 +3,7 @@
     "input_calibration": null,
     "input_cross_talk": null,
     "head_pos": null,
-    "output_tag_sss": "sss",
-    "output_tag_tsss": "tsss",
+    "param_output_tag": "sss",
     "params_maxwell_filter": {
         "origin": "auto",
         "int_order": 8,

@@ -58,13 +58,8 @@ raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_fi
                                                  head_pos=head_pos_file, **config['params_maxwell_filter'])
 
 # Save file
-type_maxfilter = config.pop('params_maxwell_filter')
-if type_maxfilter['st_duration'] is None:
-    raw_maxfilter.save(raw_maxfilter.filenames[0].replace('.fif', '_%s.fif' % config['output_tag_sss']),
-                       **config['params_save'])
-else:
-    raw_maxfilter.save(raw_maxfilter.filenames[0].replace('.fif', '_%s.fif' % config['output_tag_tsss']),
-                       **config['params_save'])
+raw_maxfilter.save(raw_maxfilter.filenames[0].replace('.fif', '_%s.fif' % config['param_output_tag']),
+                   **config['params_save'])
 
 # Generate a report
 report = mne.Report(title='Results Maxfilter', verbose=True)
