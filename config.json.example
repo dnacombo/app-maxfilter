@@ -1,5 +1,5 @@
 {
-    "input_raw": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test//rest1_bad_channels-raw.fif",
+    "input_raw": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test/rest1_bad_channels-raw.fif",
     "input_calibration": null,
     "input_cross_talk": null,
     "head_pos": null,
@@ -12,7 +12,7 @@
         "st_duration": null,
         "st_correlation": 0.98,
         "coord_frame": "head",
-        "destination": null,
+        "destination": "/network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test/rest2-raw.fif",
         "regularize": "in",
         "ignore_ref": false,
         "bad_condition": "error",

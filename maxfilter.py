@@ -90,6 +90,9 @@ report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral densi
 # Save report
 report.save('report_maxfilter.html', overwrite=True)
 
+# Success message in product.json
+dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
+
 # Save the dict_json_product in a json file
 with open('product.json', 'w') as outfile:
     json.dump(dict_json_product, outfile)
