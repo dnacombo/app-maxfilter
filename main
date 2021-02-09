@@ -15,7 +15,7 @@ set -e
 set -x
 
 # Make output directory
-#mkdir -p out_dir
+mkdir -p out_dir
 
 # Run the actual python code
 #singularity exec docker://brainlife/mne:0.22.0 python3 maxfilter.py
