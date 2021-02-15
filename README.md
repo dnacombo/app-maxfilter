@@ -11,8 +11,12 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional fine calibration file in `.dat`,
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
-    * an optional destination file in `.fif`,
-4) Ouput files are
+    * an optional destination file in `.fif`.
+4) Input parameters are:
+    * `st_duration`: if not `None`, apply tSS with specified buffer duration (in seconds),
+    * `st_correlation`: correlation limit between inner and outer subspaces used to reject ovwrlapping intersecting 
+      inner/outer signals during tSSS.
+5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
     * an `.html` report containing figures.
 
@@ -47,7 +51,8 @@ This App has not yet been registered in Brainlife.io.
 ### Running Locally (on your machine)
 
 1. git clone this repo
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files (see `config.json.example`)
+2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input 
+   files and values of the input parameters (see `config.json.example`).
 
 ```json
 {
