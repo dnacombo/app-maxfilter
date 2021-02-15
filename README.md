@@ -11,13 +11,13 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional fine calibration file in `.dat`,
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
+    * an optional destination file in `.fif`,
 4) Ouput files are
     * a `.fif` MEG file after Maxwell filtering,
     * an `.html` report containing figures.
 
 ### Authors
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
-- [Maximilien Chaumon](maximilien.chaumon@icm-institute.org)
 
 ### Contributors
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
@@ -48,7 +48,7 @@ This App has not yet been registered in Brainlife.io.
 
 ```json
 {
-  "input": "rest1-raw.fif"
+  "fif": "rest1-raw.fif"
 }
 ```
 
