@@ -13,8 +13,8 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional head position file in `.pos`,
     * an optional destination file in `.fif`.
 4) Input parameters are:
-    * `st_duration`: `float` if not `None`, apply tSSS with specified buffer duration (in seconds),
-    * `st_correlation`: `float` correlation limit between inner and outer subspaces used to reject overlapping intersecting 
+    * `st_duration`: `float`, if not `None`, apply tSSS with specified buffer duration (in seconds),
+    * `st_correlation`: `float`, correlation limit between inner and outer subspaces used to reject overlapping intersecting 
       inner/outer signals during tSSS.
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
