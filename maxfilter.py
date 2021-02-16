@@ -35,15 +35,16 @@ else:
 # Head pos file
 if 'head_position' in config.keys():
     head_pos_file = config.pop('head_position')
-    head_pos_file = mne.chpi.read_head_pos(head_pos_file)
+    if head_pos_file is not None:  # when App is run locally and "head_position": null in config.json
+        head_pos_file = mne.chpi.read_head_pos(head_pos_file)
 else:
     head_pos_file = None
 
 # Warning if bad channels are empty
-if raw.info['bads'] is None:
+if not raw.info['bads']:
     UserWarning_message = f'No channels are marked as bad. ' \
-                      f'Make sure to check (automatically or visually) for bad channels before ' \
-                      f'running MaxFilter.'
+                          f'Make sure to check (automatically or visually) for bad channels before ' \
+                          f'running MaxFilter.'
     warnings.warn(UserWarning_message)
     dict_json_product['brainlife'].append({'type': 'warning', 'msg': UserWarning_message})
 
@@ -53,7 +54,7 @@ if raw.info['proc_history']:
     tsss_info = raw.info['proc_history'][0]['max_info']['max_st']
     if bool(sss_info) or bool(tsss_info) is True:
         ValueError_message = f'You cannot apply MaxFilter if data have already ' \
-                         f'processed with Maxwell-filter.'
+                             f'processed with Maxwell filtering.'
         # Raise exception
         raise ValueError(ValueError_message)
 
@@ -61,37 +62,46 @@ if raw.info['proc_history']:
 raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                  head_pos=head_pos_file, destination=destination_file,
                                                  st_duration=config['param_st_duration'],
-                                                 st_correlation=config['param_st_correlation'])
+                                                 st_correlation=config['param_st_correlation'],
+                                                 origin=config['param_origin'],
+                                                 int_order=config['param_int_order'],
+                                                 ext_order=config['param_ext_order'],
+                                                 coord_frame=config['param_coord_frame'],
+                                                 regularize=config['param_regularize'],
+                                                 ignore_ref=config['param_ignore_ref'],
+                                                 bad_condition=config['param_bad_condition'],
+                                                 st_fixed=config['param_st_fixed'],
+                                                 st_only=config['param_st_only'],
+                                                 mag_scale=config['param_mag_scale'],
+                                                 skip_by_annotation=config['param_skip_by_annotation'],
+                                                 extended_proj=config['param_extended_proj'],
+                                                 verbose=config['param_verbose'])
 
 # Save file
 if config['param_st_duration'] is not None:
-    raw_maxfilter.save("out_dir/test-raw_tsss.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxfilter/test-raw_tsss.fif", overwrite=True)
 else:
-    raw_maxfilter.save("out_dir/test-raw_sss.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxfilter/test-raw_sss.fif", overwrite=True)
 
 # Generate a report
-# report = mne.Report(title='Results Maxfilter', verbose=True)
-#
-# # Plot MEG signals in temporal domain
-# fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
-# fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
-#
-# # Plot power spectral density
-# fig_raw_psd = raw.plot_psd()
-# fig_raw_maxfilter_psd = raw_maxfilter.plot_psd()
-#
-# # Give info on the raw data
-# data_folder = '/network/lustre/iss01/home/aurore.bussalb/Repositories/app-maxfilter/data/'  # change for BL
-# report.parse_folder(data_folder, pattern='*rest1-raw.fif', render_bem=False)
-#
-# # Add figures to report
-# report.add_figs_to_section(fig_raw, captions='MEG signals before MaxFilter')
-# report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after MaxFilter')
-# report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before MaxFilter')
-# report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral density after MaxFilter')
-#
-# # Save report
-# report.save('out_dir/report_maxfilter.html', overwrite=True)
+report = mne.Report(title='Results Maxfilter', verbose=True)
+
+# Plot MEG signals in temporal domain
+fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
+fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
+
+# Plot power spectral density
+fig_raw_psd = raw.plot_psd()
+fig_raw_maxfilter_psd = raw_maxfilter.plot_psd()
+
+# Add figures to report
+report.add_figs_to_section(fig_raw, captions='MEG signals before MaxFilter')
+report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after MaxFilter')
+report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before MaxFilter')
+report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral density after MaxFilter')
+
+# Save report
+report.save('out_dir_report/report_maxfilter.html', overwrite=True)
 
 # Success message in product.json
 dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})

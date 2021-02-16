@@ -14,12 +14,9 @@
 set -e
 set -x
 
-# Make output directory
-mkdir -p out_dir
+# Make output directories
+mkdir -p out_dir_maxfilter
+mkdir -p out_dir_report
 
 # Run the actual python code
 singularity exec docker://brainlife/mne:0.22.0 python3 maxfilter.py
-
-# Test local
-# singularity exec -e -B /network/lustre/iss01/cenir/analyse/meeg/BRAINLIFE/aurore/data_for_test docker://brainlife/mne:0.22.0 python3 maxfilter.py .
-# python3 ./maxfilter.py

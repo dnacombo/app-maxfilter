@@ -12,10 +12,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
     * an optional destination file in `.fif`.
-4) Input parameters are:
-    * `st_duration`: `float`, if not `None`, apply tSSS with specified buffer duration (in seconds),
-    * `st_correlation`: `float`, correlation limit between inner and outer subspaces used to reject overlapping intersecting 
-      inner/outer signals during tSSS.
+4) Input parameters are the parameters of the function [mne.preprocessing.maxwell_filter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html)
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
     * an `.html` report containing figures.
