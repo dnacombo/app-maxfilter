@@ -4,7 +4,6 @@
     "cross_talk_correction": null,
     "destination": null,
     "head_position": null,
-    "param_origin": "auto",
     "param_int_order": 8,
     "param_ext_order": 3,
     "param_st_duration": null,
@@ -17,6 +16,5 @@
     "param_st_only": false,
     "param_mag_scale": 100.0,
     "param_skip_by_annotation": ["edge", "bad_acq_skip"],
-    "param_extended_proj": [],
-    "param_verbose": null
+    "param_extended_proj": []
 }
