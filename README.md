@@ -24,7 +24,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `bad_condition`: `str`, how to deal with ill-conditioned SSS matrices, either 'error', 'warning', 'info' , 'ignore',
     * `st_fixed`: `bool`, if `True`, do tSSS using the median head position during the st_duration window,
     * `st_only`: `bool`, if `True`, only tSSS projection of MEG data will be performed on the output data,
-    * `mag_scale`: `float`, The magenetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m),
+    * `mag_scale`: `float`, the magenetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m),
     * `param_skip_by_annotation`, `str` or `listof str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
