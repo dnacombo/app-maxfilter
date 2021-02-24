@@ -72,8 +72,7 @@ raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_fi
                                                  st_fixed=config['param_st_fixed'],
                                                  st_only=config['param_st_only'],
                                                  skip_by_annotation=config['param_skip_by_annotation'],
-                                                 mag_scale=config['param_mag_scale'],
-                                                 extended_proj=config['param_extended_proj'])
+                                                 mag_scale=config['param_mag_scale'])
 # Save file
 if config['param_st_duration'] is not None:
     raw_maxfilter.save("out_dir_maxfilter/test-raw_tsss.fif", overwrite=True)

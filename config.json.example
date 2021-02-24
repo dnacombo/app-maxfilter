@@ -15,6 +15,5 @@
     "param_st_fixed": true,
     "param_st_only": false,
     "param_mag_scale": 100.0,
-    "param_skip_by_annotation": ["edge", "bad_acq_skip"],
-    "param_extended_proj": []
+    "param_skip_by_annotation": ["edge", "bad_acq_skip"]
 }
