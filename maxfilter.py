@@ -62,7 +62,17 @@ if raw.info['proc_history']:
 raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                  head_pos=head_pos_file, destination=destination_file,
                                                  st_duration=config['param_st_duration'],
-                                                 st_correlation=config['param_st_correlation'])
+                                                 st_correlation=config['param_st_correlation'],
+                                                 origin=config['param_origin'],
+                                                 int_order=config['param_int_order'],
+                                                 ext_order=config['param_ext_order'],
+                                                 coord_frame=config['param_coord_frame'],
+                                                 regularize=config['param_regularize'],
+                                                 ignore_ref=config['param_ignore_ref'],
+                                                 bad_condition=config['param_bad_condition'],
+                                                 st_fixed=config['param_st_fixed'],
+                                                 st_only=config['param_st_only'],
+                                                 mag_scale=config['param_mag_scale'])
 
 # Save file
 if config['param_st_duration'] is not None:
