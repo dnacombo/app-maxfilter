@@ -1,9 +1,9 @@
 {
     "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-maxfilter/data/rest1-raw.fif",
     "calibration": null,
-    "cross_talk_correction": null,
+    "crosstalk": null,
     "destination": null,
-    "head_position": null,
+    "headshape": null,
     "param_int_order": 8,
     "param_ext_order": 3,
     "param_st_duration": null,

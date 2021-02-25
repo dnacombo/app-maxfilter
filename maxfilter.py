@@ -16,8 +16,8 @@ data_file = config.pop('fif')
 raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
 
 # Read the calibration files
-if 'cross_talk_correction' in config.keys():
-    cross_talk_file = config.pop('cross_talk_correction')
+if 'crosstalk' in config.keys():
+    cross_talk_file = config.pop('crosstalk')
 else:
     cross_talk_file = None
 
@@ -33,8 +33,8 @@ else:
     destination_file = None
 
 # Head pos file
-if 'head_position' in config.keys():
-    head_pos_file = config.pop('head_position')
+if 'headshape' in config.keys():
+    head_pos_file = config.pop('headshape')
     if head_pos_file is not None:  # when App is run locally and "head_position": null in config.json
         head_pos_file = mne.chpi.read_head_pos(head_pos_file)
 else:
