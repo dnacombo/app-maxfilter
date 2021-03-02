@@ -75,16 +75,17 @@ raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_fi
                                                  mag_scale=config['param_mag_scale'])
 # Save file
 if config['param_st_duration'] is not None:
-    raw_maxfilter.save("out_dir_maxfilter/test-raw_tsss.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxfilter/raw_tsss.fif", overwrite=True)
 else:
-    raw_maxfilter.save("out_dir_maxfilter/test-raw_sss.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxfilter/raw_sss.fif", overwrite=True)
 
 # Generate a report
 report = mne.Report(title='Results Maxfilter', verbose=True)
 
 # Plot MEG signals in temporal domain
-fig_raw = raw.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
-fig_raw_maxfilter = raw_maxfilter.pick(['meg']).plot(duration=10, butterfly=False, show_scrollbars=False)
+fig_raw = raw.pick(['meg'], exclude='bads').plot(duration=10, butterfly=True, show_scrollbars=False)
+fig_raw_maxfilter = raw_maxfilter.pick(['meg'], exclude='bads').plot(duration=10, butterfly=True,
+                                                                     show_scrollbars=False)
 
 # Plot power spectral density
 fig_raw_psd = raw.plot_psd()
