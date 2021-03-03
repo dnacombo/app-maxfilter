@@ -53,7 +53,7 @@ if raw.info['proc_history']:
     sss_info = raw.info['proc_history'][0]['max_info']['sss_info']
     tsss_info = raw.info['proc_history'][0]['max_info']['max_st']
     if bool(sss_info) or bool(tsss_info) is True:
-        ValueError_message = f'You cannot apply MaxFilter if data have already ' \
+        ValueError_message = f'You cannot apply MaxFilter if data have been already ' \
                              f'processed with Maxwell filtering.'
         # Raise exception
         raise ValueError(ValueError_message)
