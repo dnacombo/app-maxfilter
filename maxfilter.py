@@ -48,6 +48,12 @@ if not raw.info['bads']:
     warnings.warn(UserWarning_message)
     dict_json_product['brainlife'].append({'type': 'warning', 'msg': UserWarning_message})
 
+# Check if param_st_duration is not None
+if config['param_st_duration'] == "":
+    param_st_duration = None
+else:
+    param_st_duration = config['param_st_duration']
+
 # Check if MaxFilter was already applied on the data
 if raw.info['proc_history']:
     sss_info = raw.info['proc_history'][0]['max_info']['sss_info']
@@ -61,7 +67,7 @@ if raw.info['proc_history']:
 # Apply MaxFilter
 raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                  head_pos=head_pos_file, destination=destination_file,
-                                                 st_duration=config['param_st_duration'],
+                                                 st_duration=param_st_duration,
                                                  st_correlation=config['param_st_correlation'],
                                                  int_order=config['param_int_order'],
                                                  ext_order=config['param_ext_order'],
@@ -83,9 +89,9 @@ else:
 report = mne.Report(title='Results Maxfilter', verbose=True)
 
 # Plot MEG signals in temporal domain
-fig_raw = raw.pick(['meg'], exclude='bads').plot(duration=10, butterfly=True, show_scrollbars=False)
-fig_raw_maxfilter = raw_maxfilter.pick(['meg'], exclude='bads').plot(duration=10, butterfly=True,
-                                                                     show_scrollbars=False)
+fig_raw = raw.pick(['meg'], exclude='bads').plot(duration=10, butterfly=False, show_scrollbars=False, proj=False)
+fig_raw_maxfilter = raw_maxfilter.pick(['meg'], exclude='bads').plot(duration=10, butterfly=False,
+                                                                     show_scrollbars=False, proj=False)
 
 # Plot power spectral density
 fig_raw_psd = raw.plot_psd()

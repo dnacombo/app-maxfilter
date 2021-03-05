@@ -1,5 +1,5 @@
 {
-    "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-maxfilter/data/rest1-raw.fif",
+    "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/test_snr/data/subject_4/bad_channels_4.fif",
     "calibration": null,
     "crosstalk": null,
     "destination": null,
@@ -9,7 +9,7 @@
     "param_st_duration": null,
     "param_st_correlation": 0.98,
     "param_coord_frame": "head",
-    "param_regularize": "in",
+    "param_regularize": null,
     "param_ignore_ref": false,
     "param_bad_condition": "error",
     "param_st_fixed": true,
