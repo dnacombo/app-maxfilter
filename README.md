@@ -29,6 +29,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
       Default is `["edge", bad_acq_skip"]`. 
       
 This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
+
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
     * an `.html` report containing figures.
