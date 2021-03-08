@@ -26,8 +26,8 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `st_only`: `bool`, if `True`, only tSSS projection of MEG data will be performed on the output data. Default is `False`.
     * `mag_scale`: `float`, the magnetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m). Default is 100.
     * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
-      Default is `["edge", bad_acq_skip"]`.
-    This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
+      Default is `["edge", bad_acq_skip"]`. 
+This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
     * an `.html` report containing figures.
