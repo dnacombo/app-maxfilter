@@ -51,7 +51,7 @@ def compute_snr(meg_file):
     if not meg_file.info['events']:
         array_events = mne.make_fixed_length_events(meg_file, duration=10)
     else:
-        array_events = mne.read_events(meg_file)  # to test with data with events
+        array_events = mne.find_events(meg_file)  # to test with data with events
 
     # create epochs
     epochs = mne.Epochs(meg_file, array_events)
