@@ -10,29 +10,53 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
               param_st_correlation, param_int_order, param_ext_order, param_coord_frame, param_regularize,
               param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
               param_mag_scale):
-    """Performs Maxwell filtering using MNE Python.
+    """Performs Maxwell filtering using MNE Python and saves the file once filtered.
 
     Parameters
     ----------
     raw: instance of mne.io.Raw
+        Data to be filtered.
+    calibration_file: str or None
+        Path to the '.dat' file with fine calibration coefficients. This file is machine/site-specific.
+    cross_talk_file: str or None
+        Path to the FIF file with cross-talk correction information.
+    head_pos_file: array or None
+        If array, movement compensation will be performed.
+    destination_file: str or None
+        The destination location for the head. Can be None, which will not change the head position, or a string path
+        to a FIF file containing a MEG device<->head transformation.
+    param_st_duration: float or None
+        If not None, apply spatiotemporal SSS with specified buffer duration (in seconds).
+    param_st_correlation: float
+        Correlation limit between inner and outer subspaces used to reject ovwrlapping intersecting inner/outer signals
+        during spatiotemporal SSS.
+    param_int_order: int
+        Order of internal component of spherical expansion.
+    param_ext_order: int
+        Order of external component of spherical expansion.
+    param_coord_frame: str
+        The coordinate frame that the origin is specified in, either 'meg' or 'head'.
+    param_regularize: str or None
+        Basis regularization type, must be “in” or None.
+    param_ignore_ref: bool
+        If True, do not include reference channels in compensation.
+    param_bad_condition: str
+        How to deal with ill-conditioned SSS matrices. Can be “error” (default), “warning”, “info”, or “ignore”.
+    param_st_fixed: bool
+        If True (default), do tSSS using the median head position during the param_st_duration window.
+    param_st_only: bool
+        If True, only tSSS (temporal) projection of MEG data will be performed on the output data.
+    param_skip_by_annotation: str or list of str
+        If a string (or list of str), any annotation segment that begins with the given string will not be included in
+        filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
+    param_mag_scale: float
+        The magenetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as
+        the gradiometers (default 100.), as they have different units (T vs T/m).
 
-    :param calibration_file:
-    :param cross_talk_file:
-    :param head_pos_file:
-    :param destination_file:
-    :param param_st_duration:
-    :param param_st_correlation:
-    :param param_int_order:
-    :param param_ext_order:
-    :param param_coord_frame:
-    :param param_regularize:
-    :param param_ignore_ref:
-    :param param_bad_condition:
-    :param param_st_fixed:
-    :param param_st_only:
-    :param param_skip_by_annotation:
-    :param param_mag_scale:
-    :return:
+    Returns
+    -------
+    raw_maxfilter: instance of mne.io.Raw
+        The raw data with Maxwell filtering applied.
     """
 
     # Check if MaxFilter was already applied on the data
@@ -65,8 +89,8 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
     return raw_maxfilter
 
 
-# Compute the SNR
-def compute_snr(meg_file):
+def _compute_snr(meg_file):
+    # Compute the SNR
 
     # select only MEG channels and exclude the bad channels
     meg_file = meg_file.pick_types(meg=True, exclude='bads')
@@ -92,8 +116,8 @@ def compute_snr(meg_file):
     return snr
 
 
-# Generate a report
-def generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, snr_before, snr_after):
+def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, snr_before, snr_after):
+    # Generate a report
 
     report = mne.Report(title='Results Maxfilter', verbose=True)
 
@@ -249,11 +273,11 @@ def main():
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
 
     # Compute SNR
-    snr_before = compute_snr(raw)
-    snr_after = compute_snr(raw_maxfilter)
+    snr_before = _compute_snr(raw)
+    snr_after = _compute_snr(raw_maxfilter)
 
     # Generate a report
-    generate_report(data_file, raw, raw_maxfilter, snr_before, snr_after)
+    _generate_report(data_file, raw, raw_maxfilter, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
