@@ -95,7 +95,7 @@ def _compute_snr(meg_file):
     # select only MEG channels and exclude the bad channels
     meg_file = meg_file.pick_types(meg=True, exclude='bads')
 
-    # create events if there is no event
+    # create fixed length events
     array_events = mne.make_fixed_length_events(meg_file, duration=10)
 
     # create epochs
