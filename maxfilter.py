@@ -10,6 +10,30 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
               param_st_correlation, param_int_order, param_ext_order, param_coord_frame, param_regularize,
               param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
               param_mag_scale):
+    """Performs Maxwell filtering using MNE Python.
+
+    Parameters
+    ----------
+    raw: instance of mne.io.Raw
+
+    :param calibration_file:
+    :param cross_talk_file:
+    :param head_pos_file:
+    :param destination_file:
+    :param param_st_duration:
+    :param param_st_correlation:
+    :param param_int_order:
+    :param param_ext_order:
+    :param param_coord_frame:
+    :param param_regularize:
+    :param param_ignore_ref:
+    :param param_bad_condition:
+    :param param_st_fixed:
+    :param param_st_only:
+    :param param_skip_by_annotation:
+    :param param_mag_scale:
+    :return:
+    """
 
     # Check if MaxFilter was already applied on the data
     if raw.info['proc_history']:
@@ -48,10 +72,6 @@ def compute_snr(meg_file):
     meg_file = meg_file.pick_types(meg=True, exclude='bads')
 
     # create events if there is no event
-    # if not meg_file.info['events']:
-    #     array_events = mne.make_fixed_length_events(meg_file, duration=10)
-    # else:
-    #     array_events = mne.find_events(meg_file)  # to test with data with events
     array_events = mne.make_fixed_length_events(meg_file, duration=10)
 
     # create epochs
