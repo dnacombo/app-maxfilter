@@ -119,6 +119,7 @@ def _compute_snr(meg_file):
 def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, snr_before, snr_after):
     # Generate a report
 
+    # Instance of mne.Report
     report = mne.Report(title='Results Maxfilter', verbose=True)
 
     # Plot MEG signals in temporal domain
