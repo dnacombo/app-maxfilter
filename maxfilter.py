@@ -116,7 +116,7 @@ def _compute_snr(meg_file):
     return snr
 
 
-def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, snr_before, snr_after):
+def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels, snr_before, snr_after):
     # Generate a report
 
     # Instance of mne.Report
@@ -143,7 +143,6 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
 
     # Put this info in html format
     # Give some info about the file before preprocessing
-    bad_channels = raw_before_preprocessing.info['bads']
     sampling_frequency = raw_before_preprocessing.info['sfreq']
     highpass = raw_before_preprocessing.info['highpass']
     lowpass = raw_before_preprocessing.info['lowpass']
@@ -265,6 +264,7 @@ def main():
         warnings.warn(user_warning_message)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message})
 
+    bad_channels = raw.info['bads']
     raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
                               param_st_duration, config['param_st_correlation'], config['param_int_order'],
                               config['param_ext_order'], config['param_coord_frame'], config['param_regularize'],
@@ -279,7 +279,7 @@ def main():
     snr_after = _compute_snr(raw_maxfilter)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_maxfilter, snr_before, snr_after)
+    _generate_report(data_file, raw, raw_maxfilter, bad_channels, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
