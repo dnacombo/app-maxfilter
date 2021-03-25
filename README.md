@@ -28,7 +28,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
       Default is `["edge", bad_acq_skip"]`. 
       
-This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
+This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function (except for two parameters: `origin`` and `extended_proj`, that are not included here).  
 
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
@@ -60,7 +60,7 @@ brainlife.io is publicly funded and for the sustainability of the project it is 
 
 ### On Brainlife.io
 
-This App has not yet been registered in Brainlife.io.
+This App is still private.
 
 ### Running Locally (on your machine)
 
