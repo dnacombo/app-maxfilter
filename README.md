@@ -16,6 +16,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `st_duration`: `float`, optional, if not `None`, apply tSSS with specified buffer duration (in seconds). Default is `None`.
     * `st_correlation`: `float`, correlation limit between inner and outer subspaces used to reject overlapping intersecting 
       inner/outer signals during tSSS. Default is 0.98.
+    * `origin`: `str`, origin of internal and external multipolar moment space in meters. Default is 'auto'.
     * `int_order`: `int`, order of internal component of spherical expansion. Default is 8.
     * `ext_order`: `int`, order of external component of spherical expansion. Default is 3.
     * `coord_frame`: `str`, the coordinate frame that the origin is specified in, either 'meg' or 'head'. Default is 'head'.
@@ -28,8 +29,8 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
       Default is `["edge", bad_acq_skip"]`. 
       
-This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function (except for two parameters: `origin` and `extended_proj`, that are not included here and so take the default
-values defined by MNE Python).  
+This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function
+N.B: one parameter `extended_proj` is not included here and so is set to its default value defined by MNE Python, which is an empty list).  
 
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,

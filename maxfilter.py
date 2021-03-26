@@ -30,6 +30,9 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
     param_st_correlation: float
         Correlation limit between inner and outer subspaces used to reject ovwrlapping intersecting inner/outer signals
         during spatiotemporal SSS.
+    origin: str
+        Origin of internal and external multipolar moment space in meters. The default is 'auto', which means (0., 0., 0.) 
+        when coord_frame='meg', and a head-digitization-based origin fit using fit_sphere_to_headshape() when coord_frame='head'. 
     param_int_order: int
         Order of internal component of spherical expansion.
     param_ext_order: int
