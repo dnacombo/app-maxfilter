@@ -30,7 +30,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
       Default is `["edge", bad_acq_skip"]`. 
       
 This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function
-N.B: one parameter `extended_proj` is not included here and so is set to its default value defined by MNE Python, which is an empty list).  
+N.B: one parameter `extended_proj` is not included here and so is set to its default value defined by MNE Python, which is an empty list.  
 
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,
