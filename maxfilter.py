@@ -7,7 +7,7 @@ import numpy as np
 
 
 def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
-              param_st_correlation, origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
+              param_st_correlation, param_origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
               param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
               param_mag_scale):
     """Perform Maxwell filtering using MNE Python and save the file once filtered.
