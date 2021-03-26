@@ -26,7 +26,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `st_fixed`: `bool`, if `True`, do tSSS using the median head position during the st_duration window. Default is `True`.
     * `st_only`: `bool`, if `True`, only tSSS projection of MEG data will be performed on the output data. Default is `False`.
     * `mag_scale`: `float`, the magnetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m). Default is 100.
-    * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
+    * `skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
       Default is `["edge", bad_acq_skip"]`. 
       
 This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function.
