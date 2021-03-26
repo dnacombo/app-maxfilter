@@ -7,7 +7,7 @@ import numpy as np
 
 
 def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
-              param_st_correlation, param_int_order, param_ext_order, param_coord_frame, param_regularize,
+              param_st_correlation, origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
               param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
               param_mag_scale):
     """Perform Maxwell filtering using MNE Python and save the file once filtered.
@@ -73,11 +73,11 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
     raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                      head_pos=head_pos_file, destination=destination_file,
                                                      st_duration=param_st_duration, st_correlation=param_st_correlation,
-                                                     int_order=param_int_order, ext_order=param_ext_order,
-                                                     coord_frame=param_coord_frame, regularize=param_regularize,
-                                                     ignore_ref=param_ignore_ref, bad_condition=param_bad_condition,
-                                                     st_fixed=param_st_fixed, st_only=param_st_only,
-                                                     skip_by_annotation=param_skip_by_annotation,
+                                                     origin=param_origin, int_order=param_int_order, 
+                                                     ext_order=param_ext_order, coord_frame=param_coord_frame, 
+                                                     regularize=param_regularize, ignore_ref=param_ignore_ref, 
+                                                     bad_condition=param_bad_condition, st_fixed=param_st_fixed, 
+                                                     st_only=param_st_only, skip_by_annotation=param_skip_by_annotation,
                                                      mag_scale=param_mag_scale)
 
     # Save file
@@ -265,10 +265,11 @@ def main():
 
     # Apply MaxFilter
     raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
-                              param_st_duration, config['param_st_correlation'], config['param_int_order'],
-                              config['param_ext_order'], config['param_coord_frame'], config['param_regularize'],
-                              config['param_ignore_ref'], config['param_bad_condition'], config['param_st_fixed'],
-                              config['param_st_only'], config['param_skip_by_annotation'], config['param_mag_scale'])
+                              param_st_duration, config['param_st_correlation'], config['param_origin'], 
+                              config['param_int_order'], config['param_ext_order'], config['param_coord_frame'], 
+                              config['param_regularize'], config['param_ignore_ref'], config['param_bad_condition'], 
+                              config['param_st_fixed'], config['param_st_only'], config['param_skip_by_annotation'], 
+                              config['param_mag_scale'])
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
