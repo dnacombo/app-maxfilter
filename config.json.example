@@ -4,7 +4,7 @@
     "crosstalk": null,
     "destination": null,
     "headshape": null,
-	"param_origin": "auto",
+    "param_origin": "auto",
     "param_int_order": 8,
     "param_ext_order": 3,
     "param_st_duration": null,
