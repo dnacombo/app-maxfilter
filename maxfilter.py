@@ -84,10 +84,7 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
                                                      mag_scale=param_mag_scale)
 
     # Save file
-    if param_st_duration is not None:
-        raw_maxfilter.save("out_dir_maxfilter/raw_tsss.fif", overwrite=True)
-    else:
-        raw_maxfilter.save("out_dir_maxfilter/raw_sss.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxfilter/meg.fif", overwrite=True)
 
     return raw_maxfilter
 
