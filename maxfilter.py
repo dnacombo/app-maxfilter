@@ -31,8 +31,9 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
         Correlation limit between inner and outer subspaces used to reject ovwrlapping intersecting inner/outer signals
         during spatiotemporal SSS.
     param_origin: str
-        Origin of internal and external multipolar moment space in meters. The default is 'auto', which means (0., 0., 0.) 
-        when coord_frame='meg', and a head-digitization-based origin fit using fit_sphere_to_headshape() when coord_frame='head'. 
+        Origin of internal and external multipolar moment space in meters. The default is 'auto', which means 
+        (0., 0., 0.)when coord_frame='meg', and a head-digitization-based origin fit using fit_sphere_to_headshape()
+        when coord_frame='head'.
     param_int_order: int
         Order of internal component of spherical expansion.
     param_ext_order: int
@@ -116,7 +117,8 @@ def _compute_snr(meg_file):
     return snr
 
 
-def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels, snr_before, snr_after):
+def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
+                     snr_before, snr_after):
     # Generate a report
 
     # Create instance of mne.Report
