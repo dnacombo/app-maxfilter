@@ -5,7 +5,6 @@ import mne
 import warnings
 import numpy as np
 import os
-import shutil
 
 
 def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
@@ -229,28 +228,21 @@ def main():
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
-    else:
-        shutil.copy2(cross_talk_file, 'out_dir_maxfilter/crosstalk_meg.fif')  # required to run a pipeline on BL
 
     # Read the calibration file
     calibration_file = config.pop('calibration')
     if os.path.exists(calibration_file) is False:
         calibration_file = None
-    else:
-        shutil.copy2(calibration_file, 'out_dir_maxfilter/calibration_meg.dat')  # required to run a pipeline on BL
 
     # Read the destination file
     destination_file = config.pop('destination')
     if os.path.exists(destination_file) is False:
         destination_file = None
-    else:
-        shutil.copy2(destination_file, 'out_dir_maxfilter/destination.fif')  # required to run a pipeline on BL
 
     # Get head pos file
     head_pos = config.pop('headshape')
     if os.path.exists(head_pos) is True:
         head_pos_file = mne.chpi.read_head_pos(head_pos)
-        shutil.copy2(head_pos, 'out_dir_maxfilter/headshape.pos')  # required to run a pipeline on BL
     else:
         head_pos_file = None
 
