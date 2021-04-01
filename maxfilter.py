@@ -255,10 +255,9 @@ def main():
         head_pos_file = None
 
     # Check if param_st_duration is not None
-    if config['param_st_duration'] == "":
+    param_st_duration = config.pop('param_st_duration')
+    if param_st_duration == "":
         param_st_duration = None  # when App is run on Bl, no value for this parameter corresponds to ''
-    else:
-        param_st_duration = config['param_st_duration']
 
     # Display a warning if bad channels are empty
     if not raw.info['bads']:
@@ -272,12 +271,16 @@ def main():
     bad_channels = raw.info['bads']
 
     # Apply MaxFilter
+    kwargs = config
+    # raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
+    #                           param_st_duration, config['param_st_correlation'], config['param_origin'], 
+    #                           config['param_int_order'], config['param_ext_order'], config['param_coord_frame'], 
+    #                           config['param_regularize'], config['param_ignore_ref'], config['param_bad_condition'], 
+    #                           config['param_st_fixed'], config['param_st_only'], config['param_skip_by_annotation'], 
+    #                           config['param_mag_scale'])
+
     raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
-                              param_st_duration, config['param_st_correlation'], config['param_origin'], 
-                              config['param_int_order'], config['param_ext_order'], config['param_coord_frame'], 
-                              config['param_regularize'], config['param_ignore_ref'], config['param_bad_condition'], 
-                              config['param_st_fixed'], config['param_st_only'], config['param_skip_by_annotation'], 
-                              config['param_mag_scale'])
+                              param_st_duration, **kwargs)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
