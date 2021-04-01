@@ -270,15 +270,13 @@ def main():
     # Keep bad channels in memory before they are interpolated by MaxFilter
     bad_channels = raw.info['bads']
 
-    # Apply MaxFilter
-    kwargs = config
-    # raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
-    #                           param_st_duration, config['param_st_correlation'], config['param_origin'], 
-    #                           config['param_int_order'], config['param_ext_order'], config['param_coord_frame'], 
-    #                           config['param_regularize'], config['param_ignore_ref'], config['param_bad_condition'], 
-    #                           config['param_st_fixed'], config['param_st_only'], config['param_skip_by_annotation'], 
-    #                           config['param_mag_scale'])
+    # Define kwargs
+    # Delete keys values in config.json when this app is executed on Brailife
+    if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
+        del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+    kwargs = config  
 
+    # Apply MaxFilter
     raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
                               param_st_duration, **kwargs)
 
