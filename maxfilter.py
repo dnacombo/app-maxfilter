@@ -263,7 +263,7 @@ def main():
     bad_channels = raw.info['bads']
 
     # Define kwargs
-    # Delete keys values in config.json when this app is executed on Brailife
+    # Delete keys values in config.json when this app is executed on Brainlife
     if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
         del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
     kwargs = config  
