@@ -105,7 +105,9 @@ def _compute_snr(meg_file):
 
     # Compute mean signal amplitude on each epoch
     epochs_data = epochs.get_data()
+    print(epochs_data.size())
     mean_signal_amplitude_per_epoch = epochs_data.mean(axis=(1, 2))  # mean on channels and times
+    print(mean_signal_amplitude_per_epoch)
 
     # Compute mean across all epochs and its std error
     mean_final = mean_signal_amplitude_per_epoch.mean()
