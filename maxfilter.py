@@ -239,12 +239,17 @@ def main():
     if os.path.exists(destination_file) is False:
         destination_file = None
 
-    # Get head pos file
+    # Read head pos file
     head_pos = config.pop('headshape')
     if os.path.exists(head_pos) is True:
         head_pos_file = mne.chpi.read_head_pos(head_pos)
     else:
         head_pos_file = None
+
+    # Read events file 
+    events_file = config.pop('events')
+    if os.path.exists(events_file) is True:
+        shutil.copy2(events_file, 'out_dir_maxfilter/events.tsv')  # required to run a pipeline on BL
 
     # Check if param_st_duration is not None
     param_st_duration = config.pop('param_st_duration')
