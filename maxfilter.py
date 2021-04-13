@@ -224,7 +224,7 @@ def main():
     data_file = config.pop('fif')
     raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
 
-    # Read the crosstalk files
+    # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
