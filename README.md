@@ -1,8 +1,8 @@
-# app-maxfilter
+# app-maxwell-filter
 
 This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
 
-# app-maxfilter documentation
+# app-maxwell-filter documentation
 
 1) Apply SSS or tSSS MaxFilter on MEG data 
 2) Reduce environmental noise
@@ -69,7 +69,7 @@ This App is still private.
 
 1. git clone this repo
 2.  Inside the cloned directory, create `config.json` with the same keys as in `config.json.example` but with paths to your input 
-   files and values of the input parameters.
+   files and values of the input parameters. For instance:
 
 ```json
 {
