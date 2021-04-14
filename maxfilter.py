@@ -86,7 +86,7 @@ def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination
                                                      mag_scale=param_mag_scale)
 
     # Save file
-    raw_maxfilter.save("out_dir_maxfilter/meg.fif", overwrite=True)
+    raw_maxfilter.save("out_dir_maxwell_filter/meg.fif", overwrite=True)
 
     return raw_maxfilter
 
@@ -228,33 +228,39 @@ def main():
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
+    else: 
+        shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
 
     # Read the calibration file
     calibration_file = config.pop('calibration')
     if os.path.exists(calibration_file) is False:
         calibration_file = None
+    else:
+        shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
 
     # Read the destination file
     destination_file = config.pop('destination')
     if os.path.exists(destination_file) is False:
         destination_file = None
+    else:
+        shutil.copy2(destination_file, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
 
     # Read head pos file
     head_pos = config.pop('headshape')
     if os.path.exists(head_pos) is True:
         head_pos_file = mne.chpi.read_head_pos(head_pos)
+        shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
     else:
         head_pos_file = None
 
     # Read events file 
     events_file = config.pop('events')
     if os.path.exists(events_file) is True:
-        shutil.copy2(events_file, 'out_dir_maxfilter/events.tsv')  # required to run a pipeline on BL
+        shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
     # Check if param_st_duration is not None
-    param_st_duration = config.pop('param_st_duration')
-    if param_st_duration == "":
-        param_st_duration = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    if config['param_st_duration'] == "":
+        config['param_st_duration'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     # Display a warning if bad channels are empty
     if not raw.info['bads']:
@@ -275,17 +281,17 @@ def main():
 
     # Apply MaxFilter
     raw_maxfilter = maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
-                              param_st_duration, **kwargs)
+                              **kwargs)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
 
     # Compute SNR
-    snr_before = _compute_snr(raw)
-    snr_after = _compute_snr(raw_maxfilter)
+    # snr_before = _compute_snr(raw)
+    # snr_after = _compute_snr(raw_maxfilter)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_maxfilter, bad_channels, snr_before, snr_after)
+    # _generate_report(data_file, raw, raw_maxfilter, bad_channels, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
