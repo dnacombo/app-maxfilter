@@ -60,7 +60,7 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
 
     Returns
     -------
-    raw_maxfilter: instance of mne.io.Raw
+    raw_maxwell_filter: instance of mne.io.Raw
         The raw data with Maxwell filtering applied.
     """
 
