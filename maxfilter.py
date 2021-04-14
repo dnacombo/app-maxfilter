@@ -5,7 +5,7 @@ import mne
 import warnings
 import numpy as np
 import os
-
+import shutil
 
 def maxfilter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
               param_st_correlation, param_origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
