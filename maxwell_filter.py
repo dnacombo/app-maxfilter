@@ -75,7 +75,7 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
             raise ValueError(value_error_message)
 
     # Apply MaxFilter
-    raw_maxfilter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
+    raw_maxwell_filter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                      head_pos=head_pos_file, destination=destination_file,
                                                      st_duration=param_st_duration, st_correlation=param_st_correlation,
                                                      origin=param_origin, int_order=param_int_order, 
@@ -86,9 +86,9 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
                                                      mag_scale=param_mag_scale)
 
     # Save file
-    raw_maxfilter.save("out_dir_maxwell_filter/meg.fif", overwrite=True)
+    raw_maxwell_filter.save("out_dir_maxwell_filter/meg.fif", overwrite=True)
 
-    return raw_maxfilter
+    return raw_maxwell_filter
 
 
 def _compute_snr(meg_file):
@@ -280,8 +280,9 @@ def main():
     kwargs = config  
 
     # Apply MaxFilter
-    raw_maxfilter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file,
-                              **kwargs)
+    raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
+                                              head_pos_file, destination_file,
+                                              **kwargs)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
