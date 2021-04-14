@@ -76,14 +76,14 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
 
     # Apply MaxFilter
     raw_maxwell_filter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
-                                                     head_pos=head_pos_file, destination=destination_file,
-                                                     st_duration=param_st_duration, st_correlation=param_st_correlation,
-                                                     origin=param_origin, int_order=param_int_order, 
-                                                     ext_order=param_ext_order, coord_frame=param_coord_frame, 
-                                                     regularize=param_regularize, ignore_ref=param_ignore_ref, 
-                                                     bad_condition=param_bad_condition, st_fixed=param_st_fixed, 
-                                                     st_only=param_st_only, skip_by_annotation=param_skip_by_annotation,
-                                                     mag_scale=param_mag_scale)
+                                                          head_pos=head_pos_file, destination=destination_file,
+                                                          st_duration=param_st_duration, st_correlation=param_st_correlation,
+                                                          origin=param_origin, int_order=param_int_order, 
+                                                          ext_order=param_ext_order, coord_frame=param_coord_frame, 
+                                                          regularize=param_regularize, ignore_ref=param_ignore_ref, 
+                                                          bad_condition=param_bad_condition, st_fixed=param_st_fixed, 
+                                                          st_only=param_st_only, skip_by_annotation=param_skip_by_annotation,
+                                                          mag_scale=param_mag_scale)
 
     # Save file
     raw_maxwell_filter.save("out_dir_maxwell_filter/meg.fif", overwrite=True)
