@@ -320,6 +320,10 @@ def main():
         warnings.warn(user_warning_message)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message})
 
+    # Deal with param_extended_proj parameter
+    if config['param_extended_proj'] == '[]'
+        config['param_extended_proj'] == []
+
     # Keep bad channels in memory before they are interpolated by MaxFilter
     bad_channels = raw.info['bads']
 
