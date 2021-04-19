@@ -23,15 +23,16 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
         Path to the FIF file with cross-talk correction information.
     head_pos_file: str or None
         Path to the '.pos' file containing the info to perform movement compensation.
-    destination_file: str or None
-        The destination location for the head. Can be None, which will not change the head position, or a string path
-        to a FIF file containing a MEG device<->head transformation.
+    destination: str,  or None
+        The destination location for the head. Can be None, which will not change the head position, a string path
+        to a FIF file containing a MEG device<->head transformation or a 3-element array giving the coordinates to 
+        translate to (with no rotations).
     param_st_duration: float or None
         If not None, apply spatiotemporal SSS with specified buffer duration (in seconds).
     param_st_correlation: float
         Correlation limit between inner and outer subspaces used to reject ovwrlapping intersecting inner/outer signals
         during spatiotemporal SSS.
-    param_origin: str
+    param_origin: str str or array_like, shape (3,)
         Origin of internal and external multipolar moment space in meters. The default is 'auto', which means 
         (0., 0., 0.)when coord_frame='meg', and a head-digitization-based origin fit using fit_sphere_to_headshape()
         when coord_frame='head'.
@@ -54,9 +55,9 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
     param_skip_by_annotation: str or list of str
         If a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
-    param_mag_scale: float
+    param_mag_scale: float or str
         The magenetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as
-        the gradiometers (default 100.), as they have different units (T vs T/m).
+        the gradiometers (default 100.), as they have different units (T vs T/m). Can be "auto".
 
     Returns
     -------
@@ -239,11 +240,20 @@ def main():
         shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
 
     # Read the destination file
-    destination_file = config.pop('destination')
+    destination = config.pop('destination')
     if os.path.exists(destination_file) is False:
-        destination_file = None
+        # Use the destination parameter if it's not None
+        if config['param_destination'] is not None:
+            destination = config['param_destination']
+        else:
+            destination = None
     else:
-        shutil.copy2(destination_file, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
+        shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
+        # Raise a value error if the user provide both the destination file and the destination parameter
+        if config['param_destination'] is not None:
+            value_error_message = f"You can't provide both a destination file and a " \
+                                  f"destination parameter. One of them must be None."
+            raise ValueError(value_error_message)
 
     # Read head pos file
     head_pos = config.pop('headshape')
@@ -262,6 +272,26 @@ def main():
     if config['param_st_duration'] == "":
         config['param_st_duration'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
+    # Deal with param_origin parameter
+
+    # Convert origin parameter into array when the app is run locally
+    if isinstance(config['param_origin'], list):
+       config['param_origin'] = np.array(config['param_origin'])
+
+    # Convert origin parameter into array when the app is run on BL
+    if isinstance(config['param_origin'], str) and config['param_origin'] != "auto":
+       param_origin = list(map(float, config['param_origin'].split(', ')))
+       config['param_origin'] = np.array(param_origin)
+
+    # Raise an error if param origin is not an array of shape 3
+    if config['param_origin'] != "auto" and config['param_origin'].shape[0] != 3:
+        value_error_message = f"Origin parameter must contined three elements."
+        raise ValueError(value_error_message)
+
+    # Deal with param_mag_scale parameter
+    if isinstance(config['param_origin'], str) and config['param_mag_scale'] != "auto":
+        config['param_mag_scale'] = float(config['param_mag_scale'])
+
     # Display a warning if bad channels are empty
     if not raw.info['bads']:
         user_warning_message = f'No channels are marked as bad. ' \
@@ -274,14 +304,20 @@ def main():
     bad_channels = raw.info['bads']
 
     # Define kwargs
+
     # Delete keys values in config.json when this app is executed on Brainlife
     if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
         del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+
+    # Delete the param_destination key    
+    del config['param_destination'] 
+
+    # Define kwargs   
     kwargs = config  
 
     # Apply MaxFilter
     raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
-                                              head_pos_file, destination_file,
+                                              head_pos_file, destination,
                                               **kwargs)
 
     # Write a success message in product.json

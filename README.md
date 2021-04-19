@@ -14,10 +14,11 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * an optional destination file in `.fif`,
     * an optional event file in `.tsv`.
 4) Input parameters are:
+    * `param_destination`: list of three `float`, optional, list of 3 elements giving the coordinates to translate to (with no rotations). This parameter must be set to None when a desrination file is provided. Default is None. 
     * `param_st_duration`: `float`, optional, if not `None`, apply tSSS with specified buffer duration (in seconds). Default is `None`.
     * `param_st_correlation`: `float`, correlation limit between inner and outer subspaces used to reject overlapping intersecting 
       inner/outer signals during tSSS. Default is 0.98.
-    * `param_origin`: `str`, origin of internal and external multipolar moment space in meters. Default is 'auto'.
+    * `param_origin`: `str` or list of three `float`, origin of internal and external multipolar moment space in meters. Default is 'auto'.
     * `param_int_order`: `int`, order of internal component of spherical expansion. Default is 8.
     * `param_ext_order`: `int`, order of external component of spherical expansion. Default is 3.
     * `param_coord_frame`: `str`, the coordinate frame that the origin is specified in, either 'meg' or 'head'. Default is 'head'.
@@ -26,7 +27,7 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `param_bad_condition`: `str`, how to deal with ill-conditioned SSS matrices, either 'error', 'warning', 'info', or 'ignore'. Default is 'error'.
     * `param_st_fixed`: `bool`, if `True`, do tSSS using the median head position during the st_duration window. Default is `True`.
     * `param_st_only`: `bool`, if `True`, only tSSS projection of MEG data will be performed on the output data. Default is `False`.
-    * `param_mag_scale`: `float`, the magnetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m). Default is 100.
+    * `param_mag_scale`: `float` or `str`, the magnetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m). Can be "auto". Default is 100.
     * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
       Default is `["edge", bad_acq_skip"]`. 
       
