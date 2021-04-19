@@ -241,7 +241,7 @@ def main():
 
     # Read the destination file
     destination = config.pop('destination')
-    if os.path.exists(destination_file) is False:
+    if os.path.exists(destination) is False:
         # Use the destination parameter if it's not None
         if config['param_destination'] is not None:
             destination = config['param_destination']
