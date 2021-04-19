@@ -245,6 +245,9 @@ def main():
         # Use the destination parameter if it's not None
         if config['param_destination'] is not None:
             destination = config['param_destination']
+            # Convert origin parameter into array when the app is run on BL
+            destination = list(map(float, destination.split(', ')))
+            destination = np.array(param_origin)
         else:
             destination = None
     else:
@@ -286,6 +289,17 @@ def main():
     # Raise an error if param origin is not an array of shape 3
     if config['param_origin'] != "auto" and config['param_origin'].shape[0] != 3:
         value_error_message = f"Origin parameter must contined three elements."
+        raise ValueError(value_error_message)
+
+    # Deal with param_destination parameter
+
+    # Convert origin parameter into array when the app is run locally
+    if isinstance(destination, list):
+       destination = np.array(destination)
+
+    # Raise an error if param origin is not an array of shape 3
+    if isinstance(destination, np.ndarray) and destination.shape[0] != 3:
+        value_error_message = f"Destination parameter must contain three elements."
         raise ValueError(value_error_message)
 
     # Deal with param_mag_scale parameter
