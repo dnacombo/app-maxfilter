@@ -1,6 +1,6 @@
 # app-maxwell-filter
 
-This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
+This is the repository of a Brainlife App using [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
 
 # app-maxwell-filter documentation
 
@@ -33,7 +33,6 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `param_extended_proj`: `list`, the empty-room projection vectors used to extend the external SSS basis (i.e., use eSSS). Default is an empty list.
       
 This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function.
-N.B: one parameter `extended_proj` is not included here and so is set to its default value defined by MNE Python, which is an empty list.  
 
 5) Ouput files are:
     * a `.fif` MEG file after Maxwell filtering,

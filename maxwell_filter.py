@@ -322,16 +322,9 @@ def main():
 
     # Deal with param_extended_proj parameter
 
-    # When the App runs locally 
-    if config['param_extended_proj']:
-        config['param_extended_proj'] = [np.array(vector) for vector in config['param_extended_proj']]
-
     # When the App runs on BL
     if config['param_extended_proj'] == '[]':
         config['param_extended_proj'] = []
-    else:
-        config['param_extended_proj'] = [np.array(vector) for vector in config['param_extended_proj']]
-        config['param_extended_proj'] = [vector.astype(np.float) for vector in config['param_extended_proj']]
 
     # Keep bad channels in memory before they are interpolated by MaxFilter
     bad_channels = raw.info['bads']
