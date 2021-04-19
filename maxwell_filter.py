@@ -10,7 +10,7 @@ import shutil
 def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
                          param_st_correlation, param_origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
                          param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
-                         param_mag_scale):
+                         param_mag_scale, param_extended_proj):
     """Perform Maxwell filtering using MNE Python and save the file once filtered.
 
     Parameters
@@ -58,6 +58,8 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
     param_mag_scale: float or str
         The magenetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as
         the gradiometers (default 100.), as they have different units (T vs T/m). Can be "auto".
+    param_extended_proj: list
+        The empty-room projection vectors used to extend the external SSS basis (i.e., use eSSS). Default is an empty list. 
 
     Returns
     -------
@@ -84,7 +86,7 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
                                                           regularize=param_regularize, ignore_ref=param_ignore_ref, 
                                                           bad_condition=param_bad_condition, st_fixed=param_st_fixed, 
                                                           st_only=param_st_only, skip_by_annotation=param_skip_by_annotation,
-                                                          mag_scale=param_mag_scale)
+                                                          mag_scale=param_mag_scale, extended_proj=param_extended_proj)
 
     # Save file
     raw_maxwell_filter.save("out_dir_maxwell_filter/meg.fif", overwrite=True)

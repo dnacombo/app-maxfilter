@@ -29,7 +29,8 @@ This is a draft of a future Brainlife App using [MNE MaxFilter](https://mne.tool
     * `param_st_only`: `bool`, if `True`, only tSSS projection of MEG data will be performed on the output data. Default is `False`.
     * `param_mag_scale`: `float` or `str`, the magnetometer scale-factor used to bring the magnetometers to approximately the same order of magnitude as the gradiometers, as they have different units (T vs T/m). Can be "auto". Default is 100.
     * `param_skip_by_annotation`, `str` or `list of str`, any annotation segment that begins with the given string will not be included in filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
-      Default is `["edge", bad_acq_skip"]`. 
+      Default is `["edge", bad_acq_skip"]`.
+    * `param_extended_proj`: `list`, the empty-room projection vectors used to extend the external SSS basis (i.e., use eSSS). Default is an empty list.
       
 This list along with the default values correspond to the parameters of MNE Python version 0.22.0 MaxFilter function.
 N.B: one parameter `extended_proj` is not included here and so is set to its default value defined by MNE Python, which is an empty list.  
