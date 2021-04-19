@@ -251,7 +251,7 @@ def main():
             # Convert origin parameter into array when the app is run on BL
             if isinstance(destination, str):
                 destination = list(map(float, destination.split(', ')))
-                destination = np.array(param_origin)
+                destination = np.array(destination)
         else:
             destination = None
     else:
