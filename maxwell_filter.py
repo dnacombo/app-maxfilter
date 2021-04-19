@@ -281,6 +281,10 @@ def main():
     if config['param_st_duration'] == "":
         config['param_st_duration'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
+    # Check if param_extended_proj parameter is empty
+    if config['param_extended_proj'] == '[]':
+        config['param_extended_proj'] = [] # required to run a pipeline on BL
+
     # Deal with param_origin parameter
 
     # Convert origin parameter into array when the app is run locally
@@ -319,12 +323,6 @@ def main():
                                f'running MaxFilter.'
         warnings.warn(user_warning_message)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message})
-
-    # Deal with param_extended_proj parameter
-
-    # When the App runs on BL
-    if config['param_extended_proj'] == '[]':
-        config['param_extended_proj'] = []
 
     # Keep bad channels in memory before they are interpolated by MaxFilter
     bad_channels = raw.info['bads']
