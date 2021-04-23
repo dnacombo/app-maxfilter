@@ -231,6 +231,7 @@ def main():
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
+        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     else: 
         shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
 
@@ -303,17 +304,17 @@ def main():
 
     # Deal with param_destination parameter
 
-    # Convert origin parameter into array when the app is run locally
+    # Convert destination parameter into array when the app is run locally
     if isinstance(destination, list):
        destination = np.array(destination)
 
-    # Raise an error if param origin is not an array of shape 3
+    # Raise an error if param destination is not an array of shape 3
     if isinstance(destination, np.ndarray) and destination.shape[0] != 3:
         value_error_message = f"Destination parameter must contain three elements."
         raise ValueError(value_error_message)
 
     # Deal with param_mag_scale parameter
-    if isinstance(config['param_origin'], str) and config['param_mag_scale'] != "auto":
+    if isinstance(config['param_mag_scale'], str) and config['param_mag_scale'] != "auto":
         config['param_mag_scale'] = float(config['param_mag_scale'])
 
     # Display a warning if bad channels are empty
