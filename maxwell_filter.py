@@ -231,7 +231,6 @@ def main():
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaa')
     else: 
         shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
 
@@ -248,15 +247,15 @@ def main():
         # Check if param_destination is not None
         if config['param_destination'] == "":
             config['param_destination'] = None
-            # Use the destination parameter if it's not None
-            if config['param_destination'] is not None:
-                destination = config['param_destination']
-                # Convert origin parameter into array when the app is run on BL
-                if isinstance(destination, str):
-                    destination = list(map(float, destination.split(', ')))
-                    destination = np.array(destination)
-            else:
-                destination = None
+        # Use the destination parameter if it's not None
+        elif config['param_destination'] is not None:
+            destination = config['param_destination']
+            # Convert origin parameter into array when the app is run on BL
+            if isinstance(destination, str):
+                destination = list(map(float, destination.split(', ')))
+                destination = np.array(destination)
+        else:
+            destination = None
     else:
         shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
         # Raise a value error if the user provide both the destination file and the destination parameter
