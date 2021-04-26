@@ -251,7 +251,7 @@ def main():
         # Use the destination parameter if it's not None
         if config['param_destination'] is not None:
             destination = config['param_destination']
-            # Convert destibation parameter into array when the app is run on BL
+            # Convert destination parameter into array when the app is run on BL
             if isinstance(destination, str):
                 destination = list(map(float, destination.split(', ')))
                 destination = np.array(destination)
