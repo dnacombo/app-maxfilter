@@ -227,6 +227,10 @@ def main():
     data_file = config.pop('fif')
     raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
 
+    # Convert all "" into None when the App runs on BL
+    tmp = dict((k, None) for k, v in config.items() if v == "")
+    config.update(tmp)
+
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
@@ -244,18 +248,16 @@ def main():
     # Read the destination file
     destination = config.pop('destination')
     if os.path.exists(destination) is False:
-        # Check if param_destination is not None
-        if config['param_destination'] == "":
-            config['param_destination'] = None
         # Use the destination parameter if it's not None
-        elif config['param_destination'] is not None:
+        if config['param_destination'] is not None:
             destination = config['param_destination']
-            # Convert origin parameter into array when the app is run on BL
+            # Convert destibation parameter into array when the app is run on BL
             if isinstance(destination, str):
                 destination = list(map(float, destination.split(', ')))
                 destination = np.array(destination)
         else:
             destination = None
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     else:
         shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
         # Raise a value error if the user provide both the destination file and the destination parameter
@@ -277,16 +279,13 @@ def main():
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
-    # Check if param_st_duration is not None
-    if config['param_st_duration'] == "":
-        config['param_st_duration'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
-
     # Check if param_extended_proj parameter is empty
     if config['param_extended_proj'] == '[]':
         config['param_extended_proj'] = [] # required to run a pipeline on BL
 
-    # Deal with param_origin parameter
+    ## Convert parameters ##      
 
+    # Deal with param_origin parameter #
     # Convert origin parameter into array when the app is run locally
     if isinstance(config['param_origin'], list):
        config['param_origin'] = np.array(config['param_origin'])
@@ -301,8 +300,7 @@ def main():
         value_error_message = f"Origin parameter must contined three elements."
         raise ValueError(value_error_message)
 
-    # Deal with param_destination parameter
-
+    # Deal with param_destination parameter #
     # Convert destination parameter into array when the app is run locally
     if isinstance(destination, list):
        destination = np.array(destination)
@@ -312,9 +310,20 @@ def main():
         value_error_message = f"Destination parameter must contain three elements."
         raise ValueError(value_error_message)
 
-    # Deal with param_mag_scale parameter
+    # Deal with param_mag_scale parameter #
     if isinstance(config['param_mag_scale'], str) and config['param_mag_scale'] != "auto":
         config['param_mag_scale'] = float(config['param_mag_scale'])
+
+    # Deal with skip_by_annotation parameter #
+    # Convert param_mag_scale into a list of strings when the app runs on BL
+    skip_by_an = config['param_skip_by_annotation']
+    if skip_by_an == "[]":
+        skip_by_an = []
+    elif isinstance(skip_by_an, str) and skip_by_an.find("[") != -1 and skip_by_an != "[]": 
+        skip_by_an = skip_by_an.replace('[', '')
+        skip_by_an = skip_by_an.replace(']', '')
+        skip_by_an = list(map(str, skip_by_an.split(', ')))         
+    config['param_skip_by_annotation'] = skip_by_an 
 
     # Display a warning if bad channels are empty
     if not raw.info['bads']:
