@@ -257,7 +257,6 @@ def main():
                 destination = np.array(destination)
         else:
             destination = None
-            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     else:
         shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
         # Raise a value error if the user provide both the destination file and the destination parameter
@@ -311,6 +310,7 @@ def main():
         raise ValueError(value_error_message)
 
     # Deal with param_mag_scale parameter #
+    # Convert param_mag_scale parameter into float when the app is run on BL
     if isinstance(config['param_mag_scale'], str) and config['param_mag_scale'] != "auto":
         config['param_mag_scale'] = float(config['param_mag_scale'])
 
