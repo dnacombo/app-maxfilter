@@ -231,6 +231,13 @@ def main():
     tmp = dict((k, None) for k, v in config.items() if v == "")
     config.update(tmp)
 
+    # Check if param_extended_proj parameter is empty
+    if config['param_extended_proj'] == '[]':
+        config['param_extended_proj'] = [] # required to run a pipeline on BL
+
+    
+    ## Read the optional files ##
+
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
@@ -259,7 +266,7 @@ def main():
             destination = None
     else:
         shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
-        # Raise a value error if the user provide both the destination file and the destination parameter
+        # Raise a value error if the user provides both the destination file and the destination parameter
         if config['param_destination'] is not None:
             value_error_message = f"You can't provide both a destination file and a " \
                                   f"destination parameter. One of them must be None."
@@ -278,9 +285,6 @@ def main():
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
-    # Check if param_extended_proj parameter is empty
-    if config['param_extended_proj'] == '[]':
-        config['param_extended_proj'] = [] # required to run a pipeline on BL
 
     ## Convert parameters ##      
 
@@ -325,6 +329,7 @@ def main():
         skip_by_an = list(map(str, skip_by_an.split(', ')))         
     config['param_skip_by_annotation'] = skip_by_an 
 
+    
     # Display a warning if bad channels are empty
     if not raw.info['bads']:
         user_warning_message = f'No channels are marked as bad. ' \
@@ -336,7 +341,8 @@ def main():
     # Keep bad channels in memory before they are interpolated by MaxFilter
     bad_channels = raw.info['bads']
 
-    # Define kwargs
+    
+    ## Define kwargs ##
 
     # Delete keys values in config.json when this app is executed on Brainlife
     if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
