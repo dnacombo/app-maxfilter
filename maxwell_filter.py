@@ -7,7 +7,7 @@ import numpy as np
 import os
 import shutil
 
-def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, destination_file, param_st_duration,
+def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, destination, param_st_duration,
                          param_st_correlation, param_origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
                          param_ignore_ref, param_bad_condition, param_st_fixed, param_st_only, param_skip_by_annotation,
                          param_mag_scale, param_extended_proj):
@@ -23,7 +23,7 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
         Path to the FIF file with cross-talk correction information.
     head_pos_file: str or None
         Path to the '.pos' file containing the info to perform movement compensation.
-    destination: str,  or None
+    destination: str, array_like, shape (3,), or None
         The destination location for the head. Can be None, which will not change the head position, a string path
         to a FIF file containing a MEG device<->head transformation or a 3-element array giving the coordinates to 
         translate to (with no rotations).
@@ -67,19 +67,19 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
         The raw data with Maxwell filtering applied.
     """
 
-    # Check if MaxFilter was already applied on the data
+    # Check if Maxwell Filter was already applied on the data
     if raw.info['proc_history']:
         sss_info = raw.info['proc_history'][0]['max_info']['sss_info']
         tsss_info = raw.info['proc_history'][0]['max_info']['max_st']
         if bool(sss_info) or bool(tsss_info) is True:
-            value_error_message = f'You cannot apply MaxFilter if data have been already ' \
+            value_error_message = f'You cannot apply Maxwell filtering if data have been already ' \
                                   f'processed with Maxwell filtering.'
             # Raise exception
             raise ValueError(value_error_message)
 
     # Apply MaxFilter
     raw_maxwell_filter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
-                                                          head_pos=head_pos_file, destination=destination_file,
+                                                          head_pos=head_pos_file, destination=destination,
                                                           st_duration=param_st_duration, st_correlation=param_st_correlation,
                                                           origin=param_origin, int_order=param_int_order, 
                                                           ext_order=param_ext_order, coord_frame=param_coord_frame, 
@@ -94,11 +94,14 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
     return raw_maxwell_filter
 
 
-def _compute_snr(meg_file):
+def _compute_snr(meg_file, meg_channels_type):
     # Compute the SNR
 
     # Select only MEG channels and exclude the bad channels
     meg_file = meg_file.pick_types(meg=True, exclude='bads')
+
+    # Compute SNR on gradiometers or magnetometers
+    meg_file = meg_file.pick(picks=meg_channels_type)
 
     # Create fixed length events
     array_events = mne.make_fixed_length_events(meg_file, duration=10)
@@ -122,36 +125,24 @@ def _compute_snr(meg_file):
 
 
 def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
-                     snr_before, snr_after):
+                     report_cross_talk_file, report_calibration_file, 
+                     report_head_pos_file, report_destination_file, 
+                     report_param_destination,
+                     param_st_duration, param_st_correlation, param_origin,
+                     param_int_order, param_ext_order, param_coord_frame, 
+                     param_regularize, param_ignore_ref, param_bad_condition, param_st_fixed,
+                     param_st_only, param_skip_by_annotation, param_mag_scale, param_extended_proj):
     # Generate a report
 
     # Create instance of mne.Report
     report = mne.Report(title='Results Maxfilter', verbose=True)
 
-    # Plot MEG signals in temporal domain
-    fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
-                                                                          show_scrollbars=False, proj=False)
-    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
-                                                                                   butterfly=False,
-                                                                                   show_scrollbars=False, proj=False)
-    # Plot power spectral density
-    fig_raw_psd = raw_before_preprocessing.plot_psd()
-    fig_raw_maxfilter_psd = raw_after_preprocessing.plot_psd()
-
-    # Add figures to report
-    report.add_figs_to_section(fig_raw, captions='MEG signals before MaxFilter', section='Temporal domain')
-    report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after MaxFilter', section='Temporal domain')
-    report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before MaxFilter',
-                               section='Frequency domain')
-    report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral density after MaxFilter',
-                               section='Frequency domain')
-
-    # Give some info about the file before preprocessing
+    ## Give some info about the file before preprocessing ##
     sampling_frequency = raw_before_preprocessing.info['sfreq']
     highpass = raw_before_preprocessing.info['highpass']
     lowpass = raw_before_preprocessing.info['lowpass']
 
-    # Put this info in html format
+    # Put this info in html format #
     # Info on data
     html_text_info = f"""<html>
     <head>
@@ -183,8 +174,60 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
 
     </html>"""
 
+    # Add html to reports
+    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
+
+    # Plot MEG signals in temporal domain
+    fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
+                                                                          show_scrollbars=False, proj=False)
+    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
+                                                                                   butterfly=False,
+                                                                                   show_scrollbars=False, proj=False)
+    # Plot power spectral density
+    fig_raw_psd = raw_before_preprocessing.plot_psd()
+    fig_raw_maxfilter_psd = raw_after_preprocessing.plot_psd()
+
+    # Add figures to report
+    report.add_figs_to_section(fig_raw, captions='MEG signals before Maxwell Filter', section='Temporal domain')
+    report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after Maxwell Filter', section='Temporal domain')
+    report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before Maxwell Filter',
+                               section='Frequency domain')
+    report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral density after Maxwell Filter',
+                               section='Frequency domain')
+
+
     # Info on SNR
-    html_text_snr = f"""<html>
+    # html_text_snr = f"""<html>
+    # <head>
+    #     <style type="text/css">
+    #         table {{ border-collapse: collapse;}}
+    #         td {{ text-align: center; border: 1px solid #000000; border-style: dashed; font-size: 15px; }}
+    #     </style>
+    # </head>
+
+    # <body>
+    #     <table width="50%" height="80%" border="2px">
+    #         <tr>
+    #             <td>SNR before MaxFilter: {snr_before}</td>
+    #         </tr>
+    #         <tr>
+    #             <td>SNR after MaxFilter: {snr_after}</td>
+    #         </tr>
+    #     </table>
+    # </body>
+
+    # </html>"""
+
+
+    # report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
+    #                             replace=False)
+
+
+    ## Values of the parameters of the App ## 
+
+    # Put this info in html format # 
+    html_text_parameters = f"""<html>
+
     <head>
         <style type="text/css">
             table {{ border-collapse: collapse;}}
@@ -195,10 +238,61 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     <body>
         <table width="50%" height="80%" border="2px">
             <tr>
-                <td>SNR before MaxFilter: {snr_before}</td>
+                <td>Cross-talk file: {report_cross_talk_file}</td>
             </tr>
             <tr>
-                <td>SNR after MaxFilter: {snr_after}</td>
+                <td>Calibration file: {report_calibration_file}</td>
+            </tr>
+            <tr>
+                <td>Headshape file: {report_head_pos_file}</td>
+            </tr>
+            <tr>
+                <td>Destination file: {report_destination_file}</td>
+            </tr>
+            <tr>
+                <td>Destination (if no destination file provided): {report_param_destination}</td>
+            </tr>
+            <tr>
+                <td>Origin: {param_origin}</td>
+            </tr>
+            <tr>
+                <td>Order of internal component of sherical expansion: {param_int_order}</td>
+            </tr>
+            <tr>
+                <td>Order of external component of sherical expansion: {param_ext_order}</td>
+            </tr>
+            <tr>
+                <td>Buffer duration: {param_st_duration}(in seconds)</td>
+            </tr>
+            <tr>
+                <td>Correlation limit between inner and outer subspaces: {param_st_correlation}</td>
+            </tr>
+            <tr>
+                <td>Coordinate frame: {param_coord_frame}</td>
+            </tr>
+            <tr>
+                <td>Regularize: {param_regularize}</td>
+            </tr>
+            <tr>
+                <td>Ignore reference channel: {param_ignore_ref}</td>
+            </tr>
+            <tr>
+                <td>Bad condition: {param_bad_condition}</td>
+            </tr>
+            <tr>
+                <td>Apply tSSS using the median head position: {param_st_fixed}</td>
+            </tr>
+            <tr>
+                <td>Only tSSS projection of MEG data: {param_st_only}</td>
+            </tr>
+            <tr>
+                <td>Magnetomer scale-factor: {param_mag_scale}</td>
+            </tr>
+            <tr>
+                <td>Skip by annotation: {param_skip_by_annotation}</td>
+            </tr>
+            <tr>
+                <td>Empty-room projection vectors: {param_extended_proj}</td>
             </tr>
         </table>
     </body>
@@ -206,9 +300,8 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     </html>"""
 
     # Add html to reports
-    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Info', replace=False)
-    report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
-                                replace=False)
+    report.add_htmls_to_section(html_text_parameters, captions='Values of the parameters of the App', 
+                                section='Parameters of the App', replace=False)
 
     # Save report
     report.save('out_dir_report/report_maxfilter.html', overwrite=True)
@@ -242,15 +335,19 @@ def main():
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is False:
         cross_talk_file = None
+        report_cross_talk_file = 'No cross-talk file provided'
     else: 
         shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
+        report_cross_talk_file = 'Cross-talk file provided'
 
     # Read the calibration file
     calibration_file = config.pop('calibration')
     if os.path.exists(calibration_file) is False:
         calibration_file = None
+        report_calibration_file = 'No calibration file provided'
     else:
         shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
+        report_calibration_file = 'Calibration file provided'
 
     # Read the destination file
     destination = config.pop('destination')
@@ -258,14 +355,18 @@ def main():
         # Use the destination parameter if it's not None
         if config['param_destination'] is not None:
             destination = config['param_destination']
+            report_param_destination = destination
             # Convert destination parameter into array when the app is run on BL
             if isinstance(destination, str):
                 destination = list(map(float, destination.split(', ')))
                 destination = np.array(destination)
         else:
             destination = None
+            report_param_destination = destination
+            report_destination_file = 'No destination file provided'
     else:
         shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
+        report_destination_file = 'Destination file provided'
         # Raise a value error if the user provides both the destination file and the destination parameter
         if config['param_destination'] is not None:
             value_error_message = f"You can't provide both a destination file and a " \
@@ -277,8 +378,10 @@ def main():
     if os.path.exists(head_pos) is True:
         head_pos_file = mne.chpi.read_head_pos(head_pos)
         shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
+        report_head_pos_file = 'Headshape file provided'
     else:
         head_pos_file = None
+        report_head_pos_file = 'No headshape file provided'
 
     # Read events file 
     events_file = config.pop('events')
@@ -362,12 +465,19 @@ def main():
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
 
-    # Compute SNR
-    # snr_before = _compute_snr(raw)
-    # snr_after = _compute_snr(raw_maxfilter)
+    # Compute SNR on magnetometers
+    # snr_before_mag = _compute_snr(raw, meg_channels_type='mag')
+    # snr_after_mag = _compute_snr(raw_maxfilter, meg_channels_type='mag')
+
+    # Compute SNR on gradiometers
+    # snr_before_mag = _compute_snr(raw, meg_channels_type='grad')
+    # snr_after_mag = _compute_snr(raw_maxfilter, meg_channels_type='grad')
 
     # Generate a report
-    # _generate_report(data_file, raw, raw_maxfilter, bad_channels, snr_before, snr_after)
+    _generate_report(data_file, raw, raw_maxwell_filter, bad_channels, 
+                     report_cross_talk_file, report_calibration_file, 
+                     report_head_pos_file, report_destination_file, 
+                     report_param_destination, **kwargs)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:

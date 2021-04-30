@@ -2,10 +2,10 @@
     "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/test_snr/data/subject_1/bad_channels_1.fif",
     "calibration": "/network/lustre/iss01/home/aurore.bussalb/Repositories/data_test_BL/sss_cal.dat",
     "crosstalk": "/network/lustre/iss01/home/aurore.bussalb/Repositories/data_test_BL/ct_sparse.fif",
-    "destination": "/network/lustre/iss01/home/aurore.bussalb/Repositories/data_test_BL/mean_tm-raw.fif",
-    "headshape": "",
-	"param_destination": null,
-	"events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_create_events/events.tsv",
+    "destination": "/bbbb/hhjh",
+    "headshape": "bbbb/hhjh",
+    "param_destination": null,
+    "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_create_events/events.tsv",
     "param_origin": "auto",
     "param_int_order": 8,
     "param_ext_order": 3,
@@ -19,5 +19,5 @@
     "param_st_only": false,
     "param_mag_scale": 100.0,
     "param_skip_by_annotation": ["edge", "bad_acq_skip"],
-	"param_extended_proj": []
+    "param_extended_proj": []
 }
