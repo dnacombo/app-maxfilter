@@ -376,6 +376,8 @@ def main():
             value_error_message = f"You can't provide both a destination file and a " \
                                   f"destination parameter. One of them must be None."
             raise ValueError(value_error_message)
+        else:
+            report_param_destination = None
 
     # Read head pos file
     head_pos = config.pop('headshape')
