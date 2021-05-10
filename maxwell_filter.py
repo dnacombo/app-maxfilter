@@ -362,32 +362,29 @@ def main():
 
     # Read the destination file
     destination = config.pop('destination')
-    if destination is not None:
-        if os.path.exists(destination) is False:
-            # Use the destination parameter if it's not None
-            if config['param_destination'] is not None:
-                destination = config['param_destination']
-                report_param_destination = destination
-                # Convert destination parameter into array when the app is run on BL
-                if isinstance(destination, str):
-                    destination = list(map(float, destination.split(', ')))
-                    destination = np.array(destination)
-            else:
-                destination = None
-                report_param_destination = destination
-                report_destination_file = 'No destination file provided'
+    if destination is None or os.path.exists(destination) is False:
+        # Use the destination parameter if it's not None
+        if config['param_destination'] is not None:
+            destination = config['param_destination']
+            report_param_destination = destination
+            # Convert destination parameter into array when the app is run on BL
+            if isinstance(destination, str):
+                destination = list(map(float, destination.split(', ')))
+                destination = np.array(destination)
         else:
-            shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
-            report_destination_file = 'Destination file provided'
-            # Raise a value error if the user provides both the destination file and the destination parameter
-            if config['param_destination'] is not None:
-                value_error_message = f"You can't provide both a destination file and a " \
-                                      f"destination parameter. One of them must be None."
-                raise ValueError(value_error_message)
-            else:
-                report_param_destination = None
+            destination = None
+            report_param_destination = destination
+            report_destination_file = 'No destination file provided'
     else:
-        report_destination_file = 'No destination file provided'
+        shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
+        report_destination_file = 'Destination file provided'
+        # Raise a value error if the user provides both the destination file and the destination parameter
+        if config['param_destination'] is not None:
+            value_error_message = f"You can't provide both a destination file and a " \
+                                  f"destination parameter. One of them must be None."
+            raise ValueError(value_error_message)
+        else:
+            report_param_destination = None
 
     # Read head pos file
     head_pos = config.pop('headshape')
