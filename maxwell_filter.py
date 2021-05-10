@@ -413,7 +413,7 @@ def main():
     channels_file = config.pop('channels')
     df_channels = pd.read_csv(channels_file, sep='\t')
     bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-    bad_channels = bad_channels.values
+    bad_channels = list(bad_channels.values)
     print(type(bad_channels))
     raw.info['bads'] = bad_channels
     print('raw info after channels.tsv', raw.info['bads'])
