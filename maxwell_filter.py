@@ -408,17 +408,23 @@ def main():
         else:
             shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
-    # # Read channels file
-    print('raw info before channels.tsv', raw.info['bads'])
+    # Read channels file
     channels_file = config.pop('channels')
     df_channels = pd.read_csv(channels_file, sep='\t')
+    # Select bad channels' name
     bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-    bad_channels = list(bad_channels.values)
-    print(type(bad_channels))
+    bad_channels = list(bad_channels.values)7
+    # Put channels.tsv bad channels in raw.info['bads']
+    raw.info['bads'].sort() 
+    bad_channels.sort()
+    # Warning message
+    if raw.info['bads'] != bad_channels:
+        user_warning_message_channels = f'Bad channels from the info of your MEG file are diffrent from ' \
+                                        f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+                                        f'are considered as bad: the info of your MEG file is updated with those channels.'
+        warnings.warn(user_warning_message_channels)
+        dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
     raw.info['bads'] = bad_channels
-    print('raw info after channels.tsv', raw.info['bads'])
-    print('bad_channels', bad_channels)
-
 
     ## Convert parameters ##      
 
