@@ -413,7 +413,7 @@ def main():
     df_channels = pd.read_csv(channels_file, sep='\t')
     # Select bad channels' name
     bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-    bad_channels = list(bad_channels.values)7
+    bad_channels = list(bad_channels.values)
     # Put channels.tsv bad channels in raw.info['bads']
     raw.info['bads'].sort() 
     bad_channels.sort()
