@@ -337,7 +337,7 @@ def main():
 
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
-    if os.path.exists(cross_talk_file) is False:
+    if os.path.exists(cross_talk_file) is False or cross_talk_file is None:
         cross_talk_file = None
         report_cross_talk_file = 'No cross-talk file provided'
     else: 
@@ -393,6 +393,9 @@ def main():
     events_file = config.pop('events')
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
+
+    # # Read channels file
+    # events_file = config.pop('events')
 
 
     ## Convert parameters ##      
