@@ -337,64 +337,77 @@ def main():
 
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
-    if os.path.exists(cross_talk_file) is False or cross_talk_file is None:
-        cross_talk_file = None
+    if cross_talk_file is not None:
+        if os.path.exists(cross_talk_file) is False:
+            cross_talk_file = None
+            report_cross_talk_file = 'No cross-talk file provided'
+        else: 
+            shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
+            report_cross_talk_file = 'Cross-talk file provided'
+    else:
         report_cross_talk_file = 'No cross-talk file provided'
-    else: 
-        shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
-        report_cross_talk_file = 'Cross-talk file provided'
 
     # Read the calibration file
     calibration_file = config.pop('calibration')
-    if os.path.exists(calibration_file) is False or calibration_file is None:
-        calibration_file = None
-        report_calibration_file = 'No calibration file provided'
+    if calibration_file is not None:
+        if os.path.exists(calibration_file) is False:
+            calibration_file = None
+            report_calibration_file = 'No calibration file provided'
+        else:
+            shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
+            report_calibration_file = 'Calibration file provided'
     else:
-        shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
-        report_calibration_file = 'Calibration file provided'
+        report_calibration_file = 'No calibration file provided'
 
     # Read the destination file
     destination = config.pop('destination')
-    if os.path.exists(destination) is False or destination is None:
-        # Use the destination parameter if it's not None
-        if config['param_destination'] is not None:
-            destination = config['param_destination']
-            report_param_destination = destination
-            # Convert destination parameter into array when the app is run on BL
-            if isinstance(destination, str):
-                destination = list(map(float, destination.split(', ')))
-                destination = np.array(destination)
+    if destination is not None:
+        if os.path.exists(destination) is False:
+            # Use the destination parameter if it's not None
+            if config['param_destination'] is not None:
+                destination = config['param_destination']
+                report_param_destination = destination
+                # Convert destination parameter into array when the app is run on BL
+                if isinstance(destination, str):
+                    destination = list(map(float, destination.split(', ')))
+                    destination = np.array(destination)
+            else:
+                destination = None
+                report_param_destination = destination
+                report_destination_file = 'No destination file provided'
         else:
-            destination = None
-            report_param_destination = destination
-            report_destination_file = 'No destination file provided'
+            shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
+            report_destination_file = 'Destination file provided'
+            # Raise a value error if the user provides both the destination file and the destination parameter
+            if config['param_destination'] is not None:
+                value_error_message = f"You can't provide both a destination file and a " \
+                                      f"destination parameter. One of them must be None."
+                raise ValueError(value_error_message)
+            else:
+                report_param_destination = None
     else:
-        shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
-        report_destination_file = 'Destination file provided'
-        # Raise a value error if the user provides both the destination file and the destination parameter
-        if config['param_destination'] is not None:
-            value_error_message = f"You can't provide both a destination file and a " \
-                                  f"destination parameter. One of them must be None."
-            raise ValueError(value_error_message)
-        else:
-            report_param_destination = None
+        report_destination_file = 'No destination file provided'
 
     # Read head pos file
     head_pos = config.pop('headshape')
-    if os.path.exists(head_pos) is False or head_pos is None:
-        head_pos_file = None
-        report_head_pos_file = 'No headshape file provided'
+    if head_pos if not None:
+        if os.path.exists(head_pos) is False:
+            head_pos_file = None
+            report_head_pos_file = 'No headshape file provided'
+        else:
+            head_pos_file = mne.chpi.read_head_pos(head_pos)
+            shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
+            report_head_pos_file = 'Headshape file provided'
     else:
-        head_pos_file = mne.chpi.read_head_pos(head_pos)
-        shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
-        report_head_pos_file = 'Headshape file provided'
+        report_head_pos_file = 'No headshape file provided'
 
     # Read events file 
     events_file = config.pop('events')
-    if os.path.exists(events_file) is False or events_file is None:
-        events_file = None
-    else:
-        shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
+    if events_file is not None:
+        if os.path.exists(events_file) is False:
+            events_file = None
+        else:
+            shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
     # # Read channels file
     print('raw info before channels.tsv', raw.info['bads'])
