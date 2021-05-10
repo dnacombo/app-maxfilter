@@ -400,6 +400,7 @@ def main():
             shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
             report_head_pos_file = 'Headshape file provided'
     else:
+        head_pos_file = head_pos
         report_head_pos_file = 'No headshape file provided'
 
     # Read events file 
