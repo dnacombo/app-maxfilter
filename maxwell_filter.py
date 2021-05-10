@@ -502,7 +502,7 @@ def main():
         df_channels.loc[index_bad_channel, 'status'] = 'good'
 
     # Save channels.tsv
-    df_channels.to_csv('out_dir_bad_channels/channels.tsv', sep = '\t', index=False)
+    df_channels.to_csv('out_dir_maxwell_filter/channels.tsv', sep = '\t', index=False)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
