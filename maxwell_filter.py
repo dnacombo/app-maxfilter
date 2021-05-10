@@ -478,9 +478,6 @@ def main():
         warnings.warn(user_warning_message)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message})
 
-    # Keep bad channels in memory before they are interpolated by MaxFilter
-    bad_channels = raw.info['bads']
-
     
     ## Define kwargs ##
 
@@ -498,6 +495,14 @@ def main():
     raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
                                               head_pos_file, destination,
                                               **kwargs)
+
+    # Update channels.tsv because bad channels were interpolated
+    for bad in bad_channels:
+        index_bad_channel = df_channels[df_channels['name'] == bad].index
+        df_channels.loc[index_bad_channel, 'status'] = 'good'
+
+    # Save channels.tsv
+    df_channels.to_csv('out_dir_bad_channels/channels.tsv', sep = '\t', index=False)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
