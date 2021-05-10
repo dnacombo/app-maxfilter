@@ -390,7 +390,7 @@ def main():
 
     # Read head pos file
     head_pos = config.pop('headshape')
-    if head_pos if not None:
+    if head_pos is not None:
         if os.path.exists(head_pos) is False:
             head_pos_file = None
             report_head_pos_file = 'No headshape file provided'
