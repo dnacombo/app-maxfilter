@@ -337,12 +337,13 @@ def main():
 
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
-    if os.path.exists(cross_talk_file) is False or cross_talk_file is None:
-        cross_talk_file = None
-        report_cross_talk_file = 'No cross-talk file provided'
-    else: 
-        shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
-        report_cross_talk_file = 'Cross-talk file provided'
+    if cross_talk_file is not None:
+        if os.path.exists(cross_talk_file) is False:
+            cross_talk_file = None
+            report_cross_talk_file = 'No cross-talk file provided'
+        else: 
+            shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
+            report_cross_talk_file = 'Cross-talk file provided'
 
     # Read the calibration file
     calibration_file = config.pop('calibration')
