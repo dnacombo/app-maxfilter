@@ -521,6 +521,11 @@ def main():
                      report_head_pos_file, report_destination_file, 
                      report_param_destination, **kwargs)
 
+
+    ##################TEST
+    print("Bad channels before maxfilter from raw.info", raw.info['bads'])
+    print("Bad channels after maxfilter from raw.info", raw_maxwell_filter.info['bads'])
+
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
         json.dump(dict_json_product, outfile)
