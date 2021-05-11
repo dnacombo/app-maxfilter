@@ -424,7 +424,7 @@ def main():
                                         f'are considered as bad: the info of your MEG file is updated with those channels.'
         warnings.warn(user_warning_message_channels)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-    raw.info['bads'] = bad_channels
+        raw.info['bads'] = bad_channels
 
     ## Convert parameters ##      
 
