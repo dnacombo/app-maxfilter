@@ -419,7 +419,7 @@ def main():
     bad_channels.sort()
     # Warning message
     if raw.info['bads'] != bad_channels:
-        user_warning_message_channels = f'Bad channels from the info of your MEG file are diffrent from ' \
+        user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
                                         f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
                                         f'are considered as bad: the info of your MEG file is updated with those channels.'
         warnings.warn(user_warning_message_channels)
