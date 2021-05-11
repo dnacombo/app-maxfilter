@@ -491,6 +491,10 @@ def main():
     # Define kwargs   
     kwargs = config  
 
+
+    ############################## Test
+    print("Bad channels before maxfilter from raw.info", raw.info['bads'])
+
     # Apply MaxFilter
     raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
                                               head_pos_file, destination,
@@ -523,7 +527,6 @@ def main():
 
 
     ##################TEST
-    print("Bad channels before maxfilter from raw.info", raw.info['bads'])
     print("Bad channels after maxfilter from raw.info", raw_maxwell_filter.info['bads'])
 
     # Save the dict_json_product in a json file
