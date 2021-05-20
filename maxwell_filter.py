@@ -336,6 +336,8 @@ def main():
     
     ## Read the optional files ##
 
+    # From meg/fif datatype # 
+
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
     if cross_talk_file is not None:
@@ -343,7 +345,6 @@ def main():
             cross_talk_file = None
             report_cross_talk_file = 'No cross-talk file provided'
         else: 
-            shutil.copy2(cross_talk_file, 'out_dir_maxwell_filter/crosstalk_meg.fif')  # required to run a pipeline on BL
             report_cross_talk_file = 'Cross-talk file provided'
     else:
         report_cross_talk_file = 'No cross-talk file provided'
@@ -355,50 +356,9 @@ def main():
             calibration_file = None
             report_calibration_file = 'No calibration file provided'
         else:
-            shutil.copy2(calibration_file, 'out_dir_maxwell_filter/calibration_meg.dat') # required to run a pipeline on BL
             report_calibration_file = 'Calibration file provided'
     else:
         report_calibration_file = 'No calibration file provided'
-
-    # Read the destination file
-    destination = config.pop('destination')
-    if destination is None or os.path.exists(destination) is False:
-        # Use the destination parameter if it's not None
-        if config['param_destination'] is not None:
-            destination = config['param_destination']
-            report_param_destination = destination
-            # Convert destination parameter into array when the app is run on BL
-            if isinstance(destination, str):
-                destination = list(map(float, destination.split(', ')))
-                destination = np.array(destination)
-        else:
-            destination = None
-            report_param_destination = destination
-            report_destination_file = 'No destination file provided'
-    else:
-        shutil.copy2(destination, 'out_dir_maxwell_filter/destination.fif') # required to run a pipeline on BL
-        report_destination_file = 'Destination file provided'
-        # Raise a value error if the user provides both the destination file and the destination parameter
-        if config['param_destination'] is not None:
-            value_error_message = f"You can't provide both a destination file and a " \
-                                  f"destination parameter. One of them must be None."
-            raise ValueError(value_error_message)
-        else:
-            report_param_destination = None
-
-    # Read head pos file
-    head_pos = config.pop('headshape')
-    if head_pos is not None:
-        if os.path.exists(head_pos) is False:
-            head_pos_file = None
-            report_head_pos_file = 'No headshape file provided'
-        else:
-            head_pos_file = mne.chpi.read_head_pos(head_pos)
-            shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
-            report_head_pos_file = 'Headshape file provided'
-    else:
-        head_pos_file = head_pos
-        report_head_pos_file = 'No headshape file provided'
 
     # Read events file 
     events_file = config.pop('events')
@@ -408,23 +368,119 @@ def main():
         else:
             shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
+    # Read head pos file
+    if 'headshape' in config.keys():
+        head_pos = config.pop('headshape')
+        if head_pos is not None:
+            if os.path.exists(head_pos) is False:
+                head_pos_file = None
+                report_head_pos_file = 'No headshape file provided'
+            else:
+                head_pos_file = mne.chpi.read_head_pos(head_pos)
+                shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
+                report_head_pos_file = 'Headshape file provided'
+        else:
+            head_pos_file = head_pos
+            report_head_pos_file = 'No headshape file provided'
+    else:
+        report_head_pos_file = 'No headshape file provided'
+
     # Read channels file
     channels_file = config.pop('channels')
-    df_channels = pd.read_csv(channels_file, sep='\t')
-    # Select bad channels' name
-    bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-    bad_channels = list(bad_channels.values)
-    # Put channels.tsv bad channels in raw.info['bads']
-    raw.info['bads'].sort() 
-    bad_channels.sort()
-    # Warning message
-    if raw.info['bads'] != bad_channels:
-        user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
-                                        f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                        f'are considered as bad: the info of your MEG file is updated with those channels.'
-        warnings.warn(user_warning_message_channels)
-        dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-        raw.info['bads'] = bad_channels
+    if channels_file is not None: 
+        if os.path.exists(channels_file):
+            channels_file_exists = True
+            df_channels = pd.read_csv(channels_file, sep='\t')
+            # Select bad channels' name
+            bad_channels = df_channels[df_channels["status"] == "bad"]['name']
+            bad_channels = list(bad_channels.values)
+            # Put channels.tsv bad channels in raw.info['bads']
+            raw.info['bads'].sort() 
+            bad_channels.sort()
+            # Warning message
+            if raw.info['bads'] != bad_channels:
+                user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
+                                                f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+                                                f'are considered as bad: the info of your MEG file is updated with those channels.'
+                warnings.warn(user_warning_message_channels)
+                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+                raw.info['bads'] = bad_channels
+
+
+    # From meg/fif-override datatype #
+
+    # Read the destination file
+    if 'destination' in config.keys(:)
+        destination = config.pop('destination')
+        if destination is None or os.path.exists(destination) is False:
+            # Use the destination parameter if it's not None
+            if config['param_destination'] is not None:
+                destination = config['param_destination']
+                report_param_destination = destination
+                # Convert destination parameter into array when the app is run on BL
+                if isinstance(destination, str):
+                    destination = list(map(float, destination.split(', ')))
+                    destination = np.array(destination)
+            else:
+                destination = None
+                report_param_destination = destination
+                report_destination_file = 'No destination file provided'
+        else:
+            report_destination_file = 'Destination file provided'
+            # Raise a value error if the user provides both the destination file and the destination parameter
+            if config['param_destination'] is not None:
+                value_error_message = f"You can't provide both a destination file and a " \
+                                      f"destination parameter. One of them must be None."
+                raise ValueError(value_error_message)
+            else:
+                report_param_destination = None
+    else:
+        report_destination_file = 'No destination file provided'
+
+    # Read head pos file
+    if 'headshape_override' in config.keys():
+        head_pos_override = config.pop('headshape_override')
+        if head_pos_override is not None:
+            if os.path.exists(head_pos_override) is False:
+                head_pos_override_file = None
+            else:
+                if report_head_pos_file == 'Headshape file provided':
+                    user_warning_message_headshape = f"You provided two headshape.pos files: by default, the file computed by " \
+                                                     f"the App will be used."
+                    warnings.warn(user_warning_message_headshape)
+                    dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_headshape})
+                head_pos_file = mne.chpi.read_head_pos(head_pos_override)
+                report_head_pos_file = 'Headshape file provided'
+                shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
+
+    # Read channels file
+    if 'channels_override' in config.keys():
+        channels_file_override = config.pop('channels_override')
+        if channels_file_override is not None: 
+            if os.path.exists(channels_file_override) is False:
+                channels_file_override = None
+            else:
+                if channels_file_exists:
+                    user_warning_message_channels_file = f"You provided two channels files: by default, the file written by " \
+                                                         f"the App detecting bad channels will be used."
+                    warnings.warn(user_warning_message_channels_file)
+                    dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
+
+            df_channels_override = pd.read_csv(channels_file_override, sep='\t')
+            # Select bad channels' name
+            bad_channels_override = df_channels_override[df_channels_override["status"] == "bad"]['name']
+            bad_channels_override = list(bad_channels_override.values)
+            # Put channels.tsv bad channels in raw.info['bads']
+            raw.info['bads'].sort() 
+            bad_channels_override.sort()
+            # Warning message
+            if raw.info['bads'] != bad_channels_override:
+                user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
+                                                f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+                                                f'are considered as bad: the info of your MEG file is updated with those channels.'
+                warnings.warn(user_warning_message_channels_override)
+                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+                raw.info['bads'] = bad_channels_override
 
     ## Convert parameters ##      
 
