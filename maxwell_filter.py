@@ -552,6 +552,9 @@ def main():
     # Define kwargs   
     kwargs = config  
 
+    # Keep bad channels in memory
+    bad_channels = raw.info['bads'] 
+
 
     # Apply MaxFilter
     raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
