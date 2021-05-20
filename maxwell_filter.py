@@ -436,6 +436,7 @@ def main():
                 report_param_destination = None
     else:
         report_destination_file = 'No destination file provided'
+        destination = None
 
     # Read head pos file
     if 'headshape_override' in config.keys():
