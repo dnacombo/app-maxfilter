@@ -492,9 +492,9 @@ def main():
             if raw.info['bads'] != bad_channels_override:
                 user_warning_message_channels_override = f'Bad channels from the info of your MEG file are different from ' \
                                                          f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                                         f'are considered as bad: the info of your MEG file is updated with those channels.'
+                                                        f'are considered as bad: the info of your MEG file is updated with those channels.'
                 warnings.warn(user_warning_message_channels_override)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_override})
                 raw.info['bads'] = bad_channels
 
 
