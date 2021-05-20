@@ -410,7 +410,7 @@ def main():
     # From meg/fif-override datatype #
 
     # Read the destination file
-    if 'destination' in config.keys(:)
+    if 'destination' in config.keys():
         destination = config.pop('destination')
         if destination is None or os.path.exists(destination) is False:
             # Use the destination parameter if it's not None
