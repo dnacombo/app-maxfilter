@@ -485,11 +485,7 @@ def main():
                 warnings.warn(user_warning_message_channels_override)
                 dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
                 raw.info['bads'] = bad_channels
-            
 
-    # If no channel file was provided # 
-    if channels_file_override_exists is False and channels_file_exists is False:
-        raw.info['bads'] = bad_channels
 
     ## Convert parameters ##      
 
@@ -562,13 +558,14 @@ def main():
                                               head_pos_file, destination,
                                               **kwargs)
 
-    # Update channels.tsv because bad channels were interpolated
-    for bad in bad_channels:
-        index_bad_channel = df_channels[df_channels['name'] == bad].index
-        df_channels.loc[index_bad_channel, 'status'] = 'good'
+    # Update channels.tsv if it exists because bad channels were interpolated
+    if channels_file_override_exists or channels_file_exists:
+        for bad in bad_channels:
+            index_bad_channel = df_channels[df_channels['name'] == bad].index
+            df_channels.loc[index_bad_channel, 'status'] = 'good'
 
-    # Save channels.tsv
-    df_channels.to_csv('out_dir_maxwell_filter/channels.tsv', sep = '\t', index=False)
+        # Save channels.tsv
+        df_channels.to_csv('out_dir_maxwell_filter/channels.tsv', sep = '\t', index=False)
 
     # Write a success message in product.json
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
