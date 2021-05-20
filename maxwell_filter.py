@@ -387,6 +387,7 @@ def main():
 
     # Read channels file
     channels_file = config.pop('channels')
+    channels_file_exists = False
     if channels_file is not None: 
         if os.path.exists(channels_file):
             channels_file_exists = True
@@ -454,7 +455,9 @@ def main():
                 report_head_pos_file = 'Headshape file provided'
                 shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
 
+
     # Read channels file
+    channels_file_override = False
     if 'channels_override' in config.keys():
         channels_file_override = config.pop('channels_override')
         if channels_file_override is not None: 
@@ -466,7 +469,7 @@ def main():
                                                          f"the App detecting bad channels will be used."
                     warnings.warn(user_warning_message_channels_file)
                     dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
-
+            channels_file_override_exists = True   
             df_channels_override = pd.read_csv(channels_file_override, sep='\t')
             # Select bad channels' name
             bad_channels_override = df_channels_override[df_channels_override["status"] == "bad"]['name']
@@ -481,7 +484,12 @@ def main():
                                                 f'are considered as bad: the info of your MEG file is updated with those channels.'
                 warnings.warn(user_warning_message_channels_override)
                 dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-                raw.info['bads'] = bad_channels_override
+                raw.info['bads'] = bad_channels
+            
+
+    # If no channel file was provided # 
+    if channels_file_override_exists is False and channels_file_exists is False:
+        raw.info['bads'] = bad_channels
 
     ## Convert parameters ##      
 
