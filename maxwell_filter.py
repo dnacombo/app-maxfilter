@@ -481,9 +481,9 @@ def main():
                     warnings.warn(user_warning_message_channels_file)
                     dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
             channels_file_override_exists = True   
-            df_channels_override = pd.read_csv(channels_file_override, sep='\t')
+            df_channels = pd.read_csv(channels_file_override, sep='\t')
             # Select bad channels' name
-            bad_channels_override = df_channels_override[df_channels_override["status"] == "bad"]['name']
+            bad_channels_override = df_channels[df_channels["status"] == "bad"]['name']
             bad_channels_override = list(bad_channels_override.values)
             # Put channels.tsv bad channels in raw.info['bads']
             raw.info['bads'].sort() 
