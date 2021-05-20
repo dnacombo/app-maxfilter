@@ -457,7 +457,7 @@ def main():
 
 
     # Read channels file
-    channels_file_override = False
+    channels_file_override_exists = False
     if 'channels_override' in config.keys():
         channels_file_override = config.pop('channels_override')
         if channels_file_override is not None: 
