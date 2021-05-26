@@ -78,7 +78,7 @@ def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, 
             # Raise exception
             raise ValueError(value_error_message)
 
-    # Apply MaxFilter
+    # Apply Maxwell Filter
     raw_maxwell_filter = mne.preprocessing.maxwell_filter(raw, calibration=calibration_file, cross_talk=cross_talk_file,
                                                           head_pos=head_pos_file, destination=destination,
                                                           st_duration=param_st_duration, st_correlation=param_st_correlation,
@@ -309,7 +309,7 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
                                 section='Parameters of the App', replace=False)
 
     # Save report
-    report.save('out_dir_report/report_maxfilter.html', overwrite=True)
+    report.save('out_dir_report/report_maxwell_filter.html', overwrite=True)
 
 
 def main():
@@ -339,6 +339,7 @@ def main():
     # From meg/fif datatype # 
 
     # Read the crosstalk file
+    # No need to copy this file in out_dir because it won't be used by the next Apps
     cross_talk_file = config.pop('crosstalk')
     if cross_talk_file is not None:
         if os.path.exists(cross_talk_file) is False:
@@ -350,6 +351,7 @@ def main():
         report_cross_talk_file = 'No cross-talk file provided'
 
     # Read the calibration file
+    # No need to copy this file in out_dir because it won't be used by the next Apps
     calibration_file = config.pop('calibration')
     if calibration_file is not None:
         if os.path.exists(calibration_file) is False:
@@ -411,6 +413,7 @@ def main():
     # From meg/fif-override datatype #
 
     # Read the destination file
+    # We suppose that this file is obtained only with the BL App 
     if 'destination' in config.keys():
         destination = config.pop('destination')
         if destination is None or os.path.exists(destination) is False:
@@ -453,49 +456,49 @@ def main():
     # Read head pos file
     if 'headshape_override' in config.keys():
         head_pos_override = config.pop('headshape_override')
-        if head_pos_override is not None:
-            if os.path.exists(head_pos_override) is False:
-                head_pos_override_file = None
-            else:
-                if report_head_pos_file == 'Headshape file provided':
-                    user_warning_message_headshape = f"You provided two headshape.pos files: by default, the file computed by " \
-                                                     f"the App will be used."
-                    warnings.warn(user_warning_message_headshape)
-                    dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_headshape})
-                head_pos_file = mne.chpi.read_head_pos(head_pos_override)
-                report_head_pos_file = 'Headshape file provided'
-                shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
+        # No need to test if headshape_override is None, this key is only present when the app runs on BL
+        if os.path.exists(head_pos_override) is False:
+            head_pos_override_file = None
+        else:
+            if report_head_pos_file == 'Headshape file provided':
+                user_warning_message_headshape = f"You provided two headshape.pos files: by default, the file computed by " \
+                                                 f"the App will be used."
+                warnings.warn(user_warning_message_headshape)
+                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_headshape})
+            head_pos_file = mne.chpi.read_head_pos(head_pos_override)
+            report_head_pos_file = 'Headshape file provided'
+            shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
 
 
     # Read channels file
     channels_file_override_exists = False
     if 'channels_override' in config.keys():
         channels_file_override = config.pop('channels_override')
-        if channels_file_override is not None: 
-            if os.path.exists(channels_file_override) is False:
-                channels_file_override = None
-            else:
-                if channels_file_exists:
-                    user_warning_message_channels_file = f"You provided two channels files: by default, the file written by " \
-                                                         f"the App detecting bad channels will be used."
-                    warnings.warn(user_warning_message_channels_file)
-                    dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
-            channels_file_override_exists = True   
-            df_channels = pd.read_csv(channels_file_override, sep='\t')
-            # Select bad channels' name
-            bad_channels_override = df_channels[df_channels["status"] == "bad"]['name']
-            bad_channels_override = list(bad_channels_override.values)
-            # Put channels.tsv bad channels in raw.info['bads']
-            raw.info['bads'].sort() 
-            bad_channels_override.sort()
-            # Warning message
-            if raw.info['bads'] != bad_channels_override:
-                user_warning_message_channels_override = f'Bad channels from the info of your MEG file are different from ' \
-                                                         f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                                        f'are considered as bad: the info of your MEG file is updated with those channels.'
-                warnings.warn(user_warning_message_channels_override)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_override})
-                raw.info['bads'] = bad_channels_override
+        # No need to test if channels_override is None, this key is only present when the app runs on BL    
+        if os.path.exists(channels_file_override) is False:
+            channels_file_override = None
+        else:
+            if channels_file_exists:
+                user_warning_message_channels_file = f"You provided two channels files: by default, the file written by " \
+                                                     f"the App detecting bad channels will be used."
+                warnings.warn(user_warning_message_channels_file)
+                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
+        channels_file_override_exists = True   
+        df_channels = pd.read_csv(channels_file_override, sep='\t')
+        # Select bad channels' name
+        bad_channels_override = df_channels[df_channels["status"] == "bad"]['name']
+        bad_channels_override = list(bad_channels_override.values)
+        # Put channels.tsv bad channels in raw.info['bads']
+        raw.info['bads'].sort() 
+        bad_channels_override.sort()
+        # Warning message
+        if raw.info['bads'] != bad_channels_override:
+            user_warning_message_channels_override = f'Bad channels from the info of your MEG file are different from ' \
+                                                     f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+                                                     f'are considered as bad: the info of your MEG file is updated with those channels.'
+            warnings.warn(user_warning_message_channels_override)
+            dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_override})
+            raw.info['bads'] = bad_channels_override
 
 
     ## Convert parameters ##      
@@ -546,7 +549,7 @@ def main():
     if not raw.info['bads']:
         user_warning_message = f'No channels are marked as bad. ' \
                                f'Make sure to check (automatically or visually) for bad channels before ' \
-                               f'running MaxFilter.'
+                               f'applying Maxwell Filtering.'
         warnings.warn(user_warning_message)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message})
 
@@ -567,7 +570,7 @@ def main():
     bad_channels = raw.info['bads'] 
 
 
-    # Apply MaxFilter
+    # Apply Maxwell Filter
     raw_maxwell_filter = apply_maxwell_filter(raw, calibration_file, cross_talk_file, 
                                               head_pos_file, destination,
                                               **kwargs)
@@ -582,7 +585,7 @@ def main():
         df_channels.to_csv('out_dir_maxwell_filter/channels.tsv', sep = '\t', index=False)
 
     # Write a success message in product.json
-    dict_json_product['brainlife'].append({'type': 'success', 'msg': 'MaxFilter was applied successfully.'})
+    dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Maxwell Filter was applied successfully.'})
 
     # Compute SNR on magnetometers
     # snr_before_mag = _compute_snr(raw, meg_channels_type='mag')
