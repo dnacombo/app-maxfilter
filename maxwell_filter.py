@@ -136,7 +136,7 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     # Generate a report
 
     # Create instance of mne.Report
-    report = mne.Report(title='Results Maxfilter', verbose=True)
+    report = mne.Report(title='Results Maxwell filter', verbose=True)
 
     ## Give some info about the file before preprocessing ##
     sampling_frequency = raw_before_preprocessing.info['sfreq']
