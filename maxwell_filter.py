@@ -393,6 +393,12 @@ def main():
     if channels_file is not None: 
         if os.path.exists(channels_file):
             channels_file_exists = True
+            # channels.tsv must be Bids compliant
+            user_warning_message_channels = f'The channels file provided must be ' \
+                                            f'BIDS compliant and the column "status" must be present. ' 
+            warnings.warn(user_warning_message_channels)
+            dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+            # Convert file into a dataframe
             df_channels = pd.read_csv(channels_file, sep='\t')
             # Select bad channels' name
             bad_channels = df_channels[df_channels["status"] == "bad"]['name']
@@ -515,7 +521,7 @@ def main():
 
     # Raise an error if param origin is not an array of shape 3
     if config['param_origin'] != "auto" and config['param_origin'].shape[0] != 3:
-        value_error_message = f"Origin parameter must contined three elements."
+        value_error_message = f"Origin parameter must contain three elements."
         raise ValueError(value_error_message)
 
     # Deal with param_destination parameter #
