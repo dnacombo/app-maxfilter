@@ -32,6 +32,8 @@ def read_optional_files(config, out_dir_name):
                 cross_talk_file = None
             else: 
                 shutil.copy2(cross_talk_file, os.path.join(out_dir_name, 'crosstalk_meg.fif'))  # required to run a pipeline on BL
+    else:
+    	cross_talk_file = None
 
     # Read the calibration file
     if 'calibration' in config.keys():
@@ -41,7 +43,9 @@ def read_optional_files(config, out_dir_name):
                 calibration_file = None
             else:
                 shutil.copy2(calibration_file, os.path.join(out_dir_name, 'calibration_meg.dat'))  # required to run a pipeline on BL
-
+    else:
+    	calibration_file = None
+    
     # Read the events file
     # We don't copy this file in outdir yet because this file can be given in fif-override and we take this one by default
     if 'events' in config.keys():
@@ -49,16 +53,18 @@ def read_optional_files(config, out_dir_name):
         if events_file is not None:
             if os.path.exists(events_file) is False:
                 events_file = None
+    else:
+    	events_file = None
 
     # Read head pos file
     # We don't copy this file in outdir because this file can be given in fif-override and we take this one by default
     if 'headshape' in config.keys():
-        head_pos = config.pop('headshape')
-        if head_pos is not None:
-            if os.path.exists(head_pos) is False:
+        head_pos_file = config.pop('headshape')
+        if head_pos_file is not None:
+            if os.path.exists(head_pos_file) is False:
                 head_pos_file = None
-        else:
-            head_pos_file = head_pos
+    else:
+    	head_pos_file = None
 
     # Read channels file
     # We don't copy this file in outdir because this file can be given in fif-override and we take this one by default
@@ -67,6 +73,8 @@ def read_optional_files(config, out_dir_name):
         if channels_file is not None: 
             if os.path.exists(channels_file) is False:
             	channels_file = None  
+    else:
+    	channels_file = None 
 
     # Read destination file
     # We don't copy this file in outdir because this file can be given in fif-override and we take this one by default
@@ -75,6 +83,8 @@ def read_optional_files(config, out_dir_name):
         if destination is not None:
             if os.path.exists(destination) is False:
                 destination = None
+    else:
+    	destination = None
 
     # From meg/fif-override datatype #
 
@@ -91,13 +101,13 @@ def read_optional_files(config, out_dir_name):
 
     # Read head pos file
     if 'headshape_override' in config.keys():
-        head_pos_override = config.pop('headshape_override')
+        head_pos_file_override = config.pop('headshape_override')
         # No need to test if headshape_override is None, this key is only present when the app runs on BL
-        if os.path.exists(head_pos_override) is False:
+        if os.path.exists(head_pos_file_override) is False:
             if head_pos_file is not None:
                 shutil.copy2(head_pos_file, os.path.join(out_dir_name, 'headshape.pos'))  # required to run a pipeline on BL 
         else:
-            head_pos_file = mne.chpi.read_head_pos(head_pos_override)
+            head_pos_file = mne.chpi.read_head_pos(head_pos_file_override)
             shutil.copy2(head_pos_file, os.path.join(out_dir_name, 'headshape.pos'))  # required to run a pipeline on BL 
 
     # Read channels file
