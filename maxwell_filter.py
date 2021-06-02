@@ -7,6 +7,7 @@ import numpy as np
 import os
 import shutil
 import pandas as pd
+import helper
 
 def apply_maxwell_filter(raw, calibration_file, cross_talk_file, head_pos_file, destination, param_st_duration,
                          param_st_correlation, param_origin, param_int_order, param_ext_order, param_coord_frame, param_regularize,
@@ -326,12 +327,14 @@ def main():
     raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
 
     # Convert all "" into None when the App runs on BL
-    tmp = dict((k, None) for k, v in config.items() if v == "")
-    config.update(tmp)
+    # tmp = dict((k, None) for k, v in config.items() if v == "")
+    # config.update(tmp)
+
+    config = helper.convert_parameters_to_None(config)
 
     # Check if param_extended_proj parameter is empty
     if config['param_extended_proj'] == '[]':
-        config['param_extended_proj'] = [] # required to run a pipeline on BL
+        config['param_extended_proj'] = [] 
 
     
     ## Read the optional files ##
@@ -340,172 +343,197 @@ def main():
 
     # Read the crosstalk file
     # No need to copy this file in out_dir because it won't be used by the next Apps
-    cross_talk_file = config.pop('crosstalk')
-    if cross_talk_file is not None:
-        if os.path.exists(cross_talk_file) is False:
-            cross_talk_file = None
-            report_cross_talk_file = 'No cross-talk file provided'
-        else: 
-            report_cross_talk_file = 'Cross-talk file provided'
-    else:
-        report_cross_talk_file = 'No cross-talk file provided'
+    # cross_talk_file = config.pop('crosstalk')
+    # if cross_talk_file is not None:
+    #     if os.path.exists(cross_talk_file) is False:
+    #         cross_talk_file = None
+    #         report_cross_talk_file = 'No cross-talk file provided'
+    #     else: 
+    #         report_cross_talk_file = 'Cross-talk file provided'
+    # else:
+    #     report_cross_talk_file = 'No cross-talk file provided'
 
     # Read the calibration file
     # No need to copy this file in out_dir because it won't be used by the next Apps
-    calibration_file = config.pop('calibration')
-    if calibration_file is not None:
-        if os.path.exists(calibration_file) is False:
-            calibration_file = None
-            report_calibration_file = 'No calibration file provided'
-        else:
-            report_calibration_file = 'Calibration file provided'
-    else:
-        report_calibration_file = 'No calibration file provided'
+    # calibration_file = config.pop('calibration')
+    # if calibration_file is not None:
+    #     if os.path.exists(calibration_file) is False:
+    #         calibration_file = None
+    #         report_calibration_file = 'No calibration file provided'
+    #     else:
+    #         report_calibration_file = 'Calibration file provided'
+    # else:
+    #     report_calibration_file = 'No calibration file provided'
+
 
     # Read events file 
-    events_file = config.pop('events')
-    if events_file is not None:
-        if os.path.exists(events_file) is False:
-            events_file = None
-        else:
-            shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
+    # events_file = config.pop('events')
+    # if events_file is not None:
+    #     if os.path.exists(events_file) is False:
+    #         events_file = None
+    #     else:
+    #         shutil.copy2(events_file, 'out_dir_maxwell_filter/events.tsv')  # required to run a pipeline on BL
 
     # Read head pos file
-    if 'headshape' in config.keys():
-        head_pos = config.pop('headshape')
-        if head_pos is not None:
-            if os.path.exists(head_pos) is False:
-                head_pos_file = None
-                report_head_pos_file = 'No headshape file provided'
-            else:
-                head_pos_file = mne.chpi.read_head_pos(head_pos)
-                shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
-                report_head_pos_file = 'Headshape file provided'
-        else:
-            head_pos_file = head_pos
-            report_head_pos_file = 'No headshape file provided'
-    else:
-        report_head_pos_file = 'No headshape file provided'
+    # if 'headshape' in config.keys():
+    #     head_pos = config.pop('headshape')
+    #     if head_pos is not None:
+    #         if os.path.exists(head_pos) is False:
+    #             head_pos_file = None
+    #             report_head_pos_file = 'No headshape file provided'
+    #         else:
+    #             head_pos_file = mne.chpi.read_head_pos(head_pos)
+    #             shutil.copy2(head_pos_file, 'out_dir_maxwell_filter/headshape.pos') # required to run a pipeline on BL 
+    #             report_head_pos_file = 'Headshape file provided'
+    #     else:
+    #         head_pos_file = head_pos
+    #         report_head_pos_file = 'No headshape file provided'
+    # else:
+    #     report_head_pos_file = 'No headshape file provided'
 
     # Read channels file
-    channels_file = config.pop('channels')
-    channels_file_exists = False
-    if channels_file is not None: 
-        if os.path.exists(channels_file):
-            channels_file_exists = True
-            # channels.tsv must be Bids compliant
-            user_warning_message_channels = f'The channels file provided must be ' \
-                                            f'BIDS compliant and the column "status" must be present. ' 
+    # channels_file = config.pop('channels')
+    # channels_file_exists = False
+    # if channels_file is not None: 
+    #     if os.path.exists(channels_file):
+    #         channels_file_exists = True
+    #         # channels.tsv must be Bids compliant
+    #         user_warning_message_channels = f'The channels file provided must be ' \
+    #                                         f'BIDS compliant and the column "status" must be present. ' 
+    #         warnings.warn(user_warning_message_channels)
+    #         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+    #         # Convert file into a dataframe
+    #         df_channels = pd.read_csv(channels_file, sep='\t')
+    #         # Select bad channels' name
+    #         bad_channels = df_channels[df_channels["status"] == "bad"]['name']
+    #         bad_channels = list(bad_channels.values)
+    #         # Put channels.tsv bad channels in raw.info['bads']
+    #         raw.info['bads'].sort() 
+    #         bad_channels.sort()
+    #         # Warning message
+    #         if raw.info['bads'] != bad_channels:
+    #             user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
+    #                                             f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+    #                                             f'are considered as bad: the info of your MEG file is updated with those channels.'
+    #             warnings.warn(user_warning_message_channels)
+    #             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+    #             raw.info['bads'] = bad_channels
+
+
+    # # From meg/fif-override datatype #
+
+    # # Read the destination file
+    # # We suppose that this file is obtained only with the BL App 
+    # if 'destination' in config.keys():
+    #     destination = config.pop('destination')
+    #     if destination is None or os.path.exists(destination) is False:
+    #         # Use the destination parameter if it's not None
+    #         if config['param_destination'] is not None:
+    #             destination = config['param_destination']
+    #             report_param_destination = destination
+    #             # Convert destination parameter into array when the app is run on BL
+    #             if isinstance(destination, str):
+    #                 destination = list(map(float, destination.split(', ')))
+    #                 destination = np.array(destination)
+    #         else:
+    #             destination = None
+    #             report_param_destination = destination
+    #             report_destination_file = 'No destination file provided'
+    #     else:
+    #         report_destination_file = 'Destination file provided'
+    #         # Raise a value error if the user provides both the destination file and the destination parameter
+    #         if config['param_destination'] is not None:
+    #             value_error_message = f"You can't provide both a destination file and a " \
+    #                                   f"destination parameter. One of them must be None."
+    #             raise ValueError(value_error_message)
+    #         else:
+    #             report_param_destination = None
+    # else:
+    #     # Use the destination parameter if it's not None
+    #     if config['param_destination'] is not None:
+    #         destination = config['param_destination']
+    #         report_param_destination = destination
+    #         # Convert destination parameter into array when the app is run on BL
+    #         if isinstance(destination, str):
+    #             destination = list(map(float, destination.split(', ')))
+    #             destination = np.array(destination)
+    #     else:
+    #         destination = None
+    #         report_param_destination = destination
+    #         report_destination_file = 'No destination file provided'
+
+
+    # # Read head pos file
+    # if 'headshape_override' in config.keys():
+    #     head_pos_override = config.pop('headshape_override')
+    #     # No need to test if headshape_override is None, this key is only present when the app runs on BL
+    #     if os.path.exists(head_pos_override) is False:
+    #         head_pos_override_file = None
+    #     else:
+    #         if report_head_pos_file == 'Headshape file provided':
+    #             user_warning_message_headshape = f"You provided two headshape.pos files: by default, the file computed by " \
+    #                                              f"the App will be used."
+    #             warnings.warn(user_warning_message_headshape)
+    #             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_headshape})
+    #         head_pos_file = mne.chpi.read_head_pos(head_pos_override)
+    #         report_head_pos_file = 'Headshape file provided'
+    #         shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
+
+
+    # # Read channels file
+    # channels_file_override_exists = False
+    # if 'channels_override' in config.keys():
+    #     channels_file_override = config.pop('channels_override')
+    #     # No need to test if channels_override is None, this key is only present when the app runs on BL    
+    #     if os.path.exists(channels_file_override) is False:
+    #         channels_file_override = None
+    #     else:
+    #         if channels_file_exists:
+    #             user_warning_message_channels_file = f"You provided two channels files: by default, the file written by " \
+    #                                                  f"the App detecting bad channels will be used."
+    #             warnings.warn(user_warning_message_channels_file)
+    #             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
+    #     channels_file_override_exists = True   
+    #     df_channels = pd.read_csv(channels_file_override, sep='\t')
+    #     # Select bad channels' name
+    #     bad_channels_override = df_channels[df_channels["status"] == "bad"]['name']
+    #     bad_channels_override = list(bad_channels_override.values)
+    #     # Put channels.tsv bad channels in raw.info['bads']
+    #     raw.info['bads'].sort() 
+    #     bad_channels_override.sort()
+    #     # Warning message
+    #     if raw.info['bads'] != bad_channels_override:
+    #         user_warning_message_channels_override = f'Bad channels from the info of your MEG file are different from ' \
+    #                                                  f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+    #                                                  f'are considered as bad: the info of your MEG file is updated with those channels.'
+    #         warnings.warn(user_warning_message_channels_override)
+    #         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_override})
+    #         raw.info['bads'] = bad_channels_override
+
+    ####################### TEST HELPER.PY ######################
+    config = helper.convert_parameters_to_None(config)
+
+    config, cross_talk_file, calibration_file, events_file, head_pos_file, channels_file, destination = helper.read_optional_files(config, 'out_dir_maxwell_filter')
+
+    # Raise a value error if the user provides both the destination file and the destination parameter
+    if config['param_destination'] is not None and destination is not None:
+        value_error_message = f"You can't provide both a destination file and a " \
+                              f"destination parameter. One of them must be None."
+        raise ValueError(value_error_message)
+
+    # Channels.tsv must be BIDS compliant
+    if channels_file is not None:
+        user_warning_message_channels = f'The channels file provided must be ' \
+                                        f'BIDS compliant and the column "status" must be present. ' 
+        warnings.warn(user_warning_message_channels)
+        dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+
+        raw, user_warning_message_channels = helper.update_data_info_bads(raw, channels_file)
+        if user_warning_message_channels is not None: 
             warnings.warn(user_warning_message_channels)
             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-            # Convert file into a dataframe
-            df_channels = pd.read_csv(channels_file, sep='\t')
-            # Select bad channels' name
-            bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-            bad_channels = list(bad_channels.values)
-            # Put channels.tsv bad channels in raw.info['bads']
-            raw.info['bads'].sort() 
-            bad_channels.sort()
-            # Warning message
-            if raw.info['bads'] != bad_channels:
-                user_warning_message_channels = f'Bad channels from the info of your MEG file are different from ' \
-                                                f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                                f'are considered as bad: the info of your MEG file is updated with those channels.'
-                warnings.warn(user_warning_message_channels)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-                raw.info['bads'] = bad_channels
 
-
-    # From meg/fif-override datatype #
-
-    # Read the destination file
-    # We suppose that this file is obtained only with the BL App 
-    if 'destination' in config.keys():
-        destination = config.pop('destination')
-        if destination is None or os.path.exists(destination) is False:
-            # Use the destination parameter if it's not None
-            if config['param_destination'] is not None:
-                destination = config['param_destination']
-                report_param_destination = destination
-                # Convert destination parameter into array when the app is run on BL
-                if isinstance(destination, str):
-                    destination = list(map(float, destination.split(', ')))
-                    destination = np.array(destination)
-            else:
-                destination = None
-                report_param_destination = destination
-                report_destination_file = 'No destination file provided'
-        else:
-            report_destination_file = 'Destination file provided'
-            # Raise a value error if the user provides both the destination file and the destination parameter
-            if config['param_destination'] is not None:
-                value_error_message = f"You can't provide both a destination file and a " \
-                                      f"destination parameter. One of them must be None."
-                raise ValueError(value_error_message)
-            else:
-                report_param_destination = None
-    else:
-        # Use the destination parameter if it's not None
-        if config['param_destination'] is not None:
-            destination = config['param_destination']
-            report_param_destination = destination
-            # Convert destination parameter into array when the app is run on BL
-            if isinstance(destination, str):
-                destination = list(map(float, destination.split(', ')))
-                destination = np.array(destination)
-        else:
-            destination = None
-            report_param_destination = destination
-            report_destination_file = 'No destination file provided'
-
-
-    # Read head pos file
-    if 'headshape_override' in config.keys():
-        head_pos_override = config.pop('headshape_override')
-        # No need to test if headshape_override is None, this key is only present when the app runs on BL
-        if os.path.exists(head_pos_override) is False:
-            head_pos_override_file = None
-        else:
-            if report_head_pos_file == 'Headshape file provided':
-                user_warning_message_headshape = f"You provided two headshape.pos files: by default, the file computed by " \
-                                                 f"the App will be used."
-                warnings.warn(user_warning_message_headshape)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_headshape})
-            head_pos_file = mne.chpi.read_head_pos(head_pos_override)
-            report_head_pos_file = 'Headshape file provided'
-            shutil.copy2(head_pos_override, 'out_dir_maxwell_filter/headshape.pos')
-
-
-    # Read channels file
-    channels_file_override_exists = False
-    if 'channels_override' in config.keys():
-        channels_file_override = config.pop('channels_override')
-        # No need to test if channels_override is None, this key is only present when the app runs on BL    
-        if os.path.exists(channels_file_override) is False:
-            channels_file_override = None
-        else:
-            if channels_file_exists:
-                user_warning_message_channels_file = f"You provided two channels files: by default, the file written by " \
-                                                     f"the App detecting bad channels will be used."
-                warnings.warn(user_warning_message_channels_file)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_file})
-        channels_file_override_exists = True   
-        df_channels = pd.read_csv(channels_file_override, sep='\t')
-        # Select bad channels' name
-        bad_channels_override = df_channels[df_channels["status"] == "bad"]['name']
-        bad_channels_override = list(bad_channels_override.values)
-        # Put channels.tsv bad channels in raw.info['bads']
-        raw.info['bads'].sort() 
-        bad_channels_override.sort()
-        # Warning message
-        if raw.info['bads'] != bad_channels_override:
-            user_warning_message_channels_override = f'Bad channels from the info of your MEG file are different from ' \
-                                                     f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                                     f'are considered as bad: the info of your MEG file is updated with those channels.'
-            warnings.warn(user_warning_message_channels_override)
-            dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels_override})
-            raw.info['bads'] = bad_channels_override
-
+    report_calibration_file, report_cross_talk_file, report_head_pos_file, report_destination_file = helper.message_optional_files_in_reports(calibration_file, cross_talk_file, head_pos_file, destination)
 
     ## Convert parameters ##      
 
@@ -525,14 +553,26 @@ def main():
         raise ValueError(value_error_message)
 
     # Deal with param_destination parameter #
-    # Convert destination parameter into array when the app is run locally
-    if isinstance(destination, list):
-       destination = np.array(destination)
+    if config['param_destination'] is not None: 
+        destination = config['param_destination']
+        report_param_destination = destination
 
-    # Raise an error if param destination is not an array of shape 3
-    if isinstance(destination, np.ndarray) and destination.shape[0] != 3:
-        value_error_message = f"Destination parameter must contain three elements."
-        raise ValueError(value_error_message)
+        # Convert destination parameter into array when the app is run locally
+        if isinstance(destination, list):
+           destination = np.array(destination)
+
+        # Convert destination parameter into array when the app is run on BL
+        if isinstance(destination, str):
+            report_param_destination = destination
+            destination = list(map(float, destination.split(', ')))
+            destination = np.array(destination)
+
+        # Raise an error if param destination is not an array of shape 3
+        if isinstance(destination, np.ndarray) and destination.shape[0] != 3:
+            value_error_message = f"Destination parameter must contain three elements."
+            raise ValueError(value_error_message)
+    else:
+        report_param_destination = None
 
     # Deal with param_mag_scale parameter #
     # Convert param_mag_scale parameter into float when the app is run on BL
@@ -563,8 +603,10 @@ def main():
     ## Define kwargs ##
 
     # Delete keys values in config.json when this app is executed on Brainlife
-    if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
-        del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+    # if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
+    #     del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+
+    config = helper.define_kwargs(config)
 
     # Delete the param_destination key    
     del config['param_destination'] 
@@ -582,7 +624,8 @@ def main():
                                               **kwargs)
 
     # Update channels.tsv if it exists because bad channels were interpolated
-    if channels_file_override_exists or channels_file_exists:
+    if channels_file is not None:
+        df_channels = pd.read_csv(channels_file, sep='\t')
         for bad in bad_channels:
             index_bad_channel = df_channels[df_channels['name'] == bad].index
             df_channels.loc[index_bad_channel, 'status'] = 'good'
