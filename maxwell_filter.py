@@ -348,7 +348,7 @@ def main():
                                         f'BIDS compliant and the column "status" must be present. ' 
         warnings.warn(user_warning_message_channels)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-        # Udpate raw.info['bads'] with info contained in channels.tsv
+        # Update raw.info['bads'] with info contained in channels.tsv
         raw, user_warning_message_channels = helper.update_data_info_bads(raw, channels_file)
         if user_warning_message_channels is not None: 
             warnings.warn(user_warning_message_channels)
