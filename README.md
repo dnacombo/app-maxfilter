@@ -1,6 +1,6 @@
 # app-maxwell-filter
 
-This is the repository of a Brainlife App using [MNE MaxFilter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
+This is the repository of a Brainlife App using [MNE Maxwell Filter](https://mne.tools/dev/generated/mne.preprocessing.maxwell_filter.html).
 
 # app-maxwell-filter documentation
 
