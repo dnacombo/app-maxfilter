@@ -12,7 +12,7 @@ This is the repository of a Brainlife App using [MNE Maxwell Filter](https://mne
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
     * an optional destination file in `.fif`,
-    * an optional events file in `.tsv`.
+    * an optional events file in `.tsv`, 
     * an optional channels file in `.tsv`.
 4) Input parameters are:
     * `param_destination`: list of three `float`, optional, list of 3 elements giving the coordinates to translate to (with no rotations). This parameter must be set to None when a destination file is provided. Default is None. 
