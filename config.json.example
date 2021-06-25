@@ -6,7 +6,7 @@
     "headshape": null,
     "channels": null,
     "param_destination": null,
-    "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_create_events/events.tsv",
+    "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_get_events/events.tsv",
     "param_origin": "auto",
     "param_int_order": 8,
     "param_ext_order": 3,

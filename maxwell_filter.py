@@ -5,7 +5,6 @@ import mne
 import warnings
 import numpy as np
 import os
-import shutil
 import pandas as pd
 from brainlife_apps_helper import helper
 
@@ -335,7 +334,7 @@ def main():
         config['param_extended_proj'] = [] 
 
     # Read and save optional files
-    config, cross_talk_file, calibration_file, events_file, head_pos_file, channels_file, destination = helper.read_optional_files(config, 'out_dir_maxwell_filter')
+    config, cross_talk_file, calibration_file, events_file, head_pos_file, channels_file, destination, meg_json_file = helper.read_optional_files(config, 'out_dir_maxwell_filter')
 
     # Raise a value error if the user provides both the destination file and the destination parameter
     if config['param_destination'] is not None and destination is not None:
